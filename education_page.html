@@ -65,189 +65,95 @@
     </style>
 </head>
 <body class="antialiased selection:bg-orange-100 selection:text-orange-600">
-
      <nav class="fixed w-full z-50 glass-panel border-b border-slate-200">
-
         <div class="max-w-7xl mx-auto px-6">
-
             <div class="flex justify-between items-center h-16">
-
-                
-
                 <div class="flex items-center gap-3">
-
                     <a href="#inicio" class="flex items-center gap-3">
-
                         <div class="bg-teal-50 p-1.5 rounded-lg border border-teal-100">
-
                             <i data-lucide="book-open-check" class="w-5 h-5 text-teal-600"></i>
-
                         </div>
-
                         <span class="text-lg font-display font-bold text-slate-800 tracking-tight">
-
                             DBAR. <span class="text-teal-600 font-medium">Edu</span>
-
                         </span>
-
                     </a>
-
                 </div>
-
-
-
                 <div class="flex items-center gap-4">
-
                     <div class="hidden lg:flex items-center gap-6 border-r border-slate-200 pr-6">
-
                         <a href="#inicio" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Início</a>
-
                         <a href="#metodologia" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Metodologia</a>
-
                         <a href="#programas" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Soluções</a>
-
                         <button onclick="openModalEdu('agendamento')" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">
-
                             Agendar Diagnóstico
-
                         </button>
-
                     </div>
-
-
-
                     <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-teal-600 transition-all group">
-
                         <div class="flex items-center gap-2 bg-black/5 p-2 rounded-lg group-hover:bg-teal-50">
-
                         <i data-lucide="arrow-left" class="w-4 h-4"></i>    
-
-<i data-lucide="layout-grid" class="w-4 h-4"></i>
-
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
                         </div>
-
                         <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Voltar ao Hub</span>
-
                     </a>
-
-
-
                     <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-600">
-
                         <i data-lucide="menu" class="w-6 h-6"></i>
-
                     </button>
-
                 </div>
-
             </div>
-
         </div>
-
-        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 border-b border-slate-200 px-6 py-8 space-y-6">
-
-            <a href="#inicio" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Início</a>
-
-            <a href="#metodologia" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Metodologia</a>
-
-            <a href="#programas" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Soluções</a>
-
-            <a href="#contato" onclick="toggleMobileMenu()" class="block bg-teal-600 text-white text-center py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest">Agendar Diagnóstico</a>
-
+        div id="mobile-menu" class="hidden lg:hidden bg-white/98 backdrop-blur-xl border-b border-slate-200 px-6 py-8 space-y-6">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block text-xs font-bold uppercase tracking-widest text-slate-500">Início</a>
+            <a href="#metodologia" onclick="toggleMobileMenu()" class="block text-xs font-bold uppercase tracking-widest text-slate-500">Metodologia</a>
+            <a href="#programas" onclick="toggleMobileMenu()" class="block text-xs font-bold uppercase tracking-widest text-slate-500">Soluções</a>
+            <button onclick="openModalEdu('agendamento'); toggleMobileMenu();" class="w-full bg-teal-600 text-white text-center py-4 rounded-xl font-bold text-xs uppercase tracking-widest">Agendar Diagnóstico</a>
         </div>
-
     </nav>
 
      <section id="inicio" class="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-white">
-
         <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-50/50 rounded-full blur-[100px] -z-10 translate-x-1/4"></div>
-
         <div class="max-w-7xl mx-auto px-6 relative z-10 text-center lg:text-left">
-
             <div class="grid lg:grid-cols-2 gap-12 items-center">
-
                 <div>
-
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-[10px] font-bold uppercase tracking-widest mb-6">
-
                         <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
-
                         Inovação Pedagógica Validada Internacionalmente IEEE
-
                     </div>
-
                     <h1 class="text-3xl md:text-5xl font-display font-bold text-slate-900 leading-tight mb-6 tracking-tighter">
-
                         Leve a IA para a escola. <br/>
-
                         <span class="gradient-text">Avalie a aprendizagem.</span>
-
                     </h1>
-
                     <p class="text-sm md:text-base text-slate-600 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-
                         Capacite professores e alunos no uso ético de LLMs. O método DBAR transforma ferramentas digitais em pensamento crítico mensurável.
-
                     </p>
-
                     <div class="flex flex-wrap justify-center lg:justify-start gap-4">
-
                         <a href="dbar_education_plataform.html" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-teal-600/20">
-
                             <span>Ver Demo</span>
-
                             <i data-lucide="play-circle" class="w-4 h-4"></i>
-
                         </a>
-
                         <a href="#metodologia" class="glass-panel text-slate-700 border border-slate-200 px-6 py-3 rounded-xl text-sm font-semibold transition-all">
-
                             Ler Metodologia
-
                         </a>
-
                     </div>
-
                 </div>
 
                 <div class="relative max-w-sm mx-auto lg:max-w-none">
-
                     <div class="glass-panel rounded-2xl p-5 border border-teal-100 relative transform lg:-rotate-2 hover:rotate-0 transition-all duration-500 shadow-xl bg-white/40">
-
                         <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
-
                             <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Turma 12º B</h3>
-
                             <span class="px-2 py-0.5 bg-teal-50 text-teal-700 text-[9px] font-bold rounded border border-teal-100 uppercase">ROI Pedagógico</span>
-
                         </div>
-
                         <div class="space-y-4">
-
                             <div>
-
                                 <div class="flex justify-between text-[10px] mb-1"><span class="text-slate-500 font-medium uppercase">Pensamento Crítico</span><span class="text-teal-700 font-bold">+24%</span></div>
-
                                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-teal-500 h-full w-[74%]"></div></div>
-
                             </div>
-
                             <div>
-
                                 <div class="flex justify-between text-[10px] mb-1"><span class="text-slate-500 font-medium uppercase">Confiança Digital</span><span class="text-orange-600 font-bold">4.8/5.0</span></div>
-
                                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-orange-400 h-full w-[88%]"></div></div>
-
                             </div>
-
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
     </section>
@@ -402,7 +308,11 @@
             'saas': { title: 'Plataforma <span class="text-orange-500">SaaS</span>', subtitle: 'Acesso à tecnologia de medição DBAR.', tipo: 'Education (SaaS)', objetivo: 'Assinatura de software', placeholder: 'Precisamos apenas dos dados para a nossa metodologia...' },
             'agendamento': { title: 'Diagnóstico <span class="text-teal-600">Estratégico</span>', subtitle: 'Sessão de 30 minutos com a nossa equipa.', tipo: 'Education (Geral)', objetivo: 'Lead qualificado / Reunião', placeholder: 'Qual a principal urgência pedagógica?' }
         };
-
+        
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
         function openModalEdu(key) {
             const ctx = eduContexts[key] || eduContexts['agendamento'];
             document.getElementById('modal-edu-title').innerHTML = ctx.title;
@@ -418,11 +328,6 @@
             document.getElementById('modal-edu').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModalEdu(); });
         lucide.createIcons();
     </script>
