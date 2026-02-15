@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transmissão Concluída | DBAR Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #020617; color: #fff; overflow: hidden; }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .grid-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center grid-bg">
+
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[120px] animate-pulse"></div>
+    </div>
+
+    <main class="relative z-10 p-6 w-full max-w-lg text-center">
+        <div class="glass-panel p-10 md:p-16 rounded-3xl shadow-2xl border-t border-cyan-500/30">
+            
+            <div class="mb-8 flex justify-center">
+                <div class="bg-cyan-500/20 p-5 rounded-full ring-8 ring-cyan-500/5 animate-bounce">
+                    <i data-lucide="shield-check" class="w-12 h-12 text-cyan-400"></i>
+                </div>
+            </div>
+
+            <h1 class="text-3xl font-display font-bold mb-4 tracking-tighter uppercase">
+                Transmissão <span class="text-cyan-400">Recebida</span>
+            </h1>
+            
+            <p class="text-slate-400 text-sm leading-relaxed mb-10">
+                Os seus dados foram encriptados e enviados para a nossa central de inteligência. 
+                Um especialista entrará em contacto em breve.
+            </p>
+
+            <a href="index.html" class="inline-flex items-center gap-2 bg-cyan-500 text-slate-950 font-bold px-8 py-3 rounded-xl hover:bg-cyan-400 transition-all uppercase text-[10px] tracking-widest group">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                Voltar ao Hub Central
+            </a>
+
+            <p class="mt-8 text-[9px] text-slate-600 uppercase tracking-widest font-mono">
+                Redirecionamento automático em <span id="countdown">10</span>s
+            </p>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+        
+        // Countdown e Redirecionamento
+        let count = 10;
+        const display = document.getElementById('countdown');
+        const timer = setInterval(() => {
+            count--;
+            display.textContent = count;
+            if (count <= 0) {
+                clearInterval(timer);
+                window.location.href = 'index.html';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
