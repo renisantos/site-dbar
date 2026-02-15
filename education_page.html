@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="scroll-smooth">
+<html lang="pt-PT" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,7 +18,7 @@
                         display: ['Space Grotesk', 'sans-serif'],
                     },
                     colors: {
-                        teal: { 500: '#14b8a6', 600: '#0d9488', 900: '#134e4a' },
+                        teal: { 50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 900: '#134e4a' },
                         orange: { 400: '#fb923c', 500: '#f97316' }
                     }
                 }
@@ -44,23 +44,24 @@
             border-color: #14b8a6;
             box-shadow: 0 15px 30px -10px rgba(20, 184, 166, 0.15);
         }
-		/* Estilos do Modal Education */
-#modal-edu {
-    transition: all 0.3s ease-in-out;
-    visibility: hidden;
-    opacity: 0;
-}
-#modal-edu.active {
-    visibility: visible;
-    opacity: 1;
-}
-.modal-content-edu {
-    transform: scale(0.95) translateY(10px);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-#modal-edu.active .modal-content-edu {
-    transform: scale(1) translateY(0);
-}
+
+        /* ESTILOS DO MODAL EDUCATION */
+        #modal-edu {
+            transition: all 0.3s ease-in-out;
+            visibility: hidden;
+            opacity: 0;
+        }
+        #modal-edu.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content-edu {
+            transform: scale(0.95) translateY(10px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #modal-edu.active .modal-content-edu {
+            transform: scale(1) translateY(0);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-orange-100 selection:text-orange-600">
@@ -68,7 +69,6 @@
     <nav class="fixed w-full z-50 glass-panel border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex justify-between items-center h-16">
-                
                 <div class="flex items-center gap-3">
                     <a href="#inicio" class="flex items-center gap-3">
                         <div class="bg-teal-50 p-1.5 rounded-lg border border-teal-100">
@@ -92,10 +92,9 @@
 
                     <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-teal-600 transition-all group">
                         <div class="flex items-center gap-2 bg-black/5 p-2 rounded-lg group-hover:bg-teal-50">
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i>    
-			<i data-lucide="layout-grid" class="w-4 h-4"></i>
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
                         </div>
-                        <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Voltar ao Hub</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Hub</span>
                     </a>
 
                     <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-600">
@@ -108,7 +107,7 @@
             <a href="#inicio" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Início</a>
             <a href="#metodologia" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Metodologia</a>
             <a href="#programas" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Soluções</a>
-            <a href="#contato" onclick="toggleMobileMenu()" class="block bg-teal-600 text-white text-center py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest">Agendar Diagnóstico</a>
+            <button onclick="openModalEdu('agendamento'); toggleMobileMenu();" class="w-full bg-teal-600 text-white text-center py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest">Agendar Diagnóstico</button>
         </div>
     </nav>
 
@@ -119,33 +118,27 @@
                 <div>
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-[10px] font-bold uppercase tracking-widest mb-6">
                         <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
-                        Inovação Pedagógica Validada Internacionalmente IEEE
+                        Inovação Pedagógica IEEE
                     </div>
                     <h1 class="text-3xl md:text-5xl font-display font-bold text-slate-900 leading-tight mb-6 tracking-tighter">
                         Leve a IA para a escola. <br/>
                         <span class="gradient-text">Avalie a aprendizagem.</span>
                     </h1>
-					<p></p>
-					  <button onclick="openModalEdu('agendamento')" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">
-                            Agendar Diagnóstico
-                        </button>
-					<p></p>
                     <p class="text-sm md:text-base text-slate-600 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                         Capacite professores e alunos no uso ético de LLMs. O método DBAR transforma ferramentas digitais em pensamento crítico mensurável.
                     </p>
                     <div class="flex flex-wrap justify-center lg:justify-start gap-4">
-                        <a href="dbar_education_plataform.html" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-teal-600/20">
-                            <span>Ver Demo</span>
-                            <i data-lucide="play-circle" class="w-4 h-4"></i>
-                        </a>
-                        <a href="#metodologia" class="glass-panel text-slate-700 border border-slate-200 px-6 py-3 rounded-xl text-sm font-semibold transition-all">
-                            Ler Metodologia
+                        <button onclick="openModalEdu('agendamento')" class="bg-teal-600 hover:bg-teal-700 text-white px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg shadow-teal-600/20">
+                            Agendar Diagnóstico
+                        </button>
+                        <a href="#metodologia" class="glass-panel text-slate-700 border border-slate-200 px-8 py-3 rounded-xl text-sm font-semibold transition-all">
+                            Metodologia
                         </a>
                     </div>
                 </div>
 
                 <div class="relative max-w-sm mx-auto lg:max-w-none">
-                    <div class="glass-panel rounded-2xl p-5 border border-teal-100 relative transform lg:-rotate-2 hover:rotate-0 transition-all duration-500 shadow-xl bg-white/40">
+                    <div class="glass-panel rounded-2xl p-5 border border-teal-100 transform lg:-rotate-2 shadow-xl bg-white/40">
                         <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
                             <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Turma 12º B</h3>
                             <span class="px-2 py-0.5 bg-teal-50 text-teal-700 text-[9px] font-bold rounded border border-teal-100 uppercase">ROI Pedagógico</span>
@@ -155,10 +148,6 @@
                                 <div class="flex justify-between text-[10px] mb-1"><span class="text-slate-500 font-medium uppercase">Pensamento Crítico</span><span class="text-teal-700 font-bold">+24%</span></div>
                                 <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-teal-500 h-full w-[74%]"></div></div>
                             </div>
-                            <div>
-                                <div class="flex justify-between text-[10px] mb-1"><span class="text-slate-500 font-medium uppercase">Confiança Digital</span><span class="text-orange-600 font-bold">4.8/5.0</span></div>
-                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-orange-400 h-full w-[88%]"></div></div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,109 +155,72 @@
         </div>
     </section>
 
-    <section id="metodologia" class="py-20 bg-slate-50/50 border-t border-slate-100">
-        <div class="max-w-7xl mx-auto px-6 text-center">
-            <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 tracking-tight uppercase">Metodologia - Triangulação em Instituições de Ensino</h2>
-            <p class="text-slate-500 text-sm mb-12 max-w-xl mx-auto">Cruzamos evidências técnicas com processos de reflexão humana.</p>
+    <section id="programas" class="py-20 bg-slate-50 border-y border-slate-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 tracking-tight uppercase">Soluções para Instituições</h2>
+            </div>
+
             <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass-panel p-6 rounded-2xl step-card text-left bg-white">
-                    <div class="text-[10px] font-bold text-teal-600 mb-4 opacity-50 uppercase tracking-widest">Passo 01</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Evidência</h3>
-                    <p class="text-slate-500 text-xs leading-relaxed">Análise de prompts e projetos para entender o comportamento criativo dos alunos.</p>
+                <div class="glass-panel p-6 rounded-2xl hover:border-teal-400 transition-all bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="mb-4 text-teal-600 bg-teal-50 w-12 h-12 rounded-xl flex items-center justify-center border border-teal-100"><i data-lucide="users" class="w-6 h-6"></i></div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Formação Docente</h3>
+                        <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Workshops imersivos para capacitar professores no uso ético de IA.</p>
+                    </div>
+                    <button onclick="openModalEdu('docente')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                        Solicitar Ementa
+                    </button>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl step-card text-left border-orange-200 bg-orange-50/20">
-                    <div class="text-[10px] font-bold text-orange-600 mb-4 uppercase tracking-widest">Passo 02</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Reflexão</h3>
-                    <p class="text-slate-500 text-xs leading-relaxed">Validação da "Confiança Digital" através de diários de bordo e metacognição.</p>
+
+                <div class="glass-panel p-6 rounded-2xl border-teal-500 ring-4 ring-teal-500/5 bg-white relative transform md:-translate-y-4 shadow-xl flex flex-col justify-between">
+                    <div class="absolute top-0 right-0 bg-teal-600 text-white text-[8px] font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-widest">Destaque</div>
+                    <div>
+                        <div class="mb-4 text-white bg-teal-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/20"><i data-lucide="school" class="w-6 h-6"></i></div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Escola Digital</h3>
+                        <p class="text-slate-500 text-[11px] mb-6 leading-relaxed">Implementação do DBAR Analytics no currículo e suporte pedagógico.</p>
+                    </div>
+                    <button onclick="openModalEdu('demo')" class="w-full bg-teal-500 text-white font-bold py-3 rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/20 uppercase text-[10px] tracking-widest">
+                        Solicitar Demonstração
+                    </button>
                 </div>
-                <div class="glass-panel p-6 rounded-2xl step-card text-left bg-white">
-                    <div class="text-[10px] font-bold text-slate-400 mb-4 uppercase tracking-widest">Passo 03</div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Intervenção</h3>
-                    <p class="text-slate-500 text-xs leading-relaxed">Dashboards para o professor agir em casos de vulnerabilidade cognitiva.</p>
+
+                <div class="glass-panel p-6 rounded-2xl hover:border-orange-400 transition-all bg-white flex flex-col justify-between">
+                    <div>
+                        <div class="mb-4 text-orange-500 bg-orange-50 w-12 h-12 rounded-xl flex items-center justify-center border border-orange-100"><i data-lucide="layout" class="w-6 h-6"></i></div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Plataforma SaaS</h3>
+                        <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Acesso puro à tecnologia para escolas com metodologia própria.</p>
+                    </div>
+                    <button onclick="openModalEdu('saas')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                        Ver Planos
+                    </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="programas" class="py-20 bg-slate-50 border-y border-slate-200">
-    <div class="max-w-7xl mx-auto px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 tracking-tight uppercase">Soluções para Instituições</h2>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="glass-panel p-6 rounded-2xl hover:border-teal-400 transition-all bg-white flex flex-col justify-between">
-                <div>
-                    <div class="mb-4 text-teal-600 bg-teal-50 w-12 h-12 rounded-xl flex items-center justify-center border border-teal-100">
-                        <i data-lucide="users" class="w-6 h-6"></i>
+    <section id="contato" class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 uppercase tracking-tighter">Lidere a Inovação</h2>
+            <div class="grid sm:grid-cols-2 gap-4 text-left">
+                <button onclick="openModalEdu('agendamento')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group w-full">
+                    <div class="bg-teal-500 p-3 rounded-full text-white shadow-md group-hover:scale-110 transition-transform"><i data-lucide="calendar-check" class="w-6 h-6"></i></div>
+                    <div>
+                        <p class="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-0.5">Ação Pedagógica</p>
+                        <p class="text-slate-800 font-bold text-base leading-tight">Agendar Diagnóstico</p>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Formação Docente</h3>
-                    <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Workshops imersivos para capacitar professores no uso ético de IA e avaliação de competências.</p>
-                </div>
-                <button onclick="openModalEdu('docente')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
-                    Solicitar Ementa
                 </button>
-            </div>
 
-            <div class="glass-panel p-6 rounded-2xl border-teal-500 ring-4 ring-teal-500/5 bg-white relative transform md:-translate-y-4 shadow-xl flex flex-col justify-between">
-                <div class="absolute top-0 right-0 bg-teal-600 text-white text-[8px] font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-widest">Destaque</div>
-                <div>
-                    <div class="mb-4 text-white bg-teal-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/20">
-                        <i data-lucide="school" class="w-6 h-6"></i>
+                <button onclick="openModalEdu('oficial')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group w-full text-left">
+                    <div class="bg-teal-50 p-3 rounded-full text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all"><i data-lucide="mail" class="w-6 h-6"></i></div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
+                        <p class="text-slate-800 font-bold text-base leading-tight">Enviar Pedido Formal</p>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Escola Digital</h3>
-                    <p class="text-slate-500 text-[11px] mb-6 leading-relaxed">Implementação do DBAR Analytics no currículo, com licenças completas e suporte pedagógico.</p>
-                </div>      
-    <button onclick="openModalEdu('demo')" class="w-full bg-teal-500 text-white font-bold py-4 rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/20 uppercase text-xs tracking-widest">
-        Solicitar Demonstração
-    </button>
-</form>
-            </div>
-
-            <div class="glass-panel p-6 rounded-2xl hover:border-orange-400 transition-all bg-white flex flex-col justify-between">
-                <div>
-                    <div class="mb-4 text-orange-500 bg-orange-50 w-12 h-12 rounded-xl flex items-center justify-center border border-orange-100">
-                        <i data-lucide="layout" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Plataforma SaaS</h3>
-                    <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Acesso puro à tecnologia para escolas que já possuem metodologia própria mas precisam de dados.</p>
-                </div>
-                <button onclick="openModalEdu('saas')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
-                    Ver Planos
                 </button>
             </div>
         </div>
-    </div>
-</section>
-
-<section id="contato" class="py-20 bg-slate-50 border-t border-slate-200">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-        <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 uppercase tracking-tighter">Lidere a Inovação</h2>
-        <p class="text-slate-500 mb-10 text-xs italic">Transforme a sua instituição numa referência global em pedagogia com IA.</p>
-        
-        <div class="grid sm:grid-cols-2 gap-4 text-left">
-            <button onclick="openModalEdu('agendamento')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group">
-                <div class="bg-teal-500 p-3 rounded-full text-white shadow-md group-hover:scale-110 transition-transform">
-                    <i data-lucide="calendar-check" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-0.5">Ação Pedagógica</p>
-                    <p class="text-slate-800 font-bold text-base leading-tight">Agendar Diagnóstico</p>
-                </div>
-            </button>
-
-            <button onclick="openModalEdu('oficial')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group w-full text-left">
-    <div class="bg-teal-50 p-3 rounded-full text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all">
-        <i data-lucide="mail" class="w-6 h-6"></i>
-    </div>
-    <div>
-        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
-        <p class="text-slate-800 font-bold text-base leading-tight">Enviar Pedido Formal</p>
-    </div>
-</button>
-        </div>
-    </div>
-</section>
+    </section>
 
     <footer class="py-10 text-center bg-white border-t border-slate-100 opacity-60">
         <div class="flex items-center justify-center gap-3 mb-3">
@@ -278,126 +230,66 @@
         <p class="text-slate-500 text-[9px] uppercase tracking-widest">&copy; 2026 DBAR Solutions. Lisboa • Brasília • Global</p>
     </footer>
 
-    <a href="#inicio" class="fixed bottom-6 right-6 z-[60] bg-teal-500/10 backdrop-blur-md border border-teal-500/20 p-3 rounded-full text-teal-600 hover:bg-teal-500 hover:text-white transition-all shadow-md hover:scale-110 active:scale-95">
-        <i data-lucide="chevron-up" class="w-5 h-5"></i>
-    </a>
-<div id="modal-edu" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-    <div onclick="closeModalEdu()" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
-    
-    <div class="modal-content-edu relative w-full max-w-xl bg-white p-8 md:p-10 rounded-3xl shadow-2xl border border-teal-100">
-        
-        <button onclick="closeModalEdu()" class="absolute top-6 right-6 text-slate-400 hover:text-teal-600 transition-colors">
-            <i data-lucide="x" class="w-6 h-6"></i>
-        </button>
-
-        <div class="mb-8 text-left">
-            <h3 id="modal-edu-title" class="text-2xl font-display font-bold text-slate-900 mb-2 uppercase tracking-tight">
-                Solicitar <span class="text-teal-600">Apoio</span>
-            </h3>
-            <p id="modal-edu-subtitle" class="text-slate-500 text-xs">Conectando a sua instituição ao futuro da pedagogia...</p>
-        </div>
-
-        <form name="leads-education" method="POST" data-netlify="true" action="/success" class="space-y-4">
-            <input type="hidden" name="form-name" value="leads-education" />
-            <input type="hidden" name="tipo_solicitacao" id="edu-tipo" value="" />
-            <input type="hidden" name="objetivo_lead" id="edu-objetivo" value="" />
-
-            <div class="grid grid-cols-1 gap-4 text-left">
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nome do Responsável</label>
-                    <input type="text" name="name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Instituição / Escola</label>
-                    <input type="text" name="institution" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">E-mail Oficial</label>
-                        <input type="email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nº Alunos</label>
-                        <select name="students" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
-                            <option value="100">Até 100</option>
-                            <option value="500">100 a 500</option>
-                            <option value="1000">500+</option>
+    <div id="modal-edu" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div onclick="closeModalEdu()" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+        <div class="modal-content-edu relative w-full max-w-xl bg-white p-8 md:p-10 rounded-3xl shadow-2xl border border-teal-100">
+            <button onclick="closeModalEdu()" class="absolute top-6 right-6 text-slate-400 hover:text-teal-600 transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div class="mb-8 text-left">
+                <h3 id="modal-edu-title" class="text-2xl font-display font-bold text-slate-900 mb-2 uppercase tracking-tight">Solicitar <span class="text-teal-600">Apoio</span></h3>
+                <p id="modal-edu-subtitle" class="text-slate-500 text-xs">Conectando a sua instituição ao futuro...</p>
+            </div>
+            <form name="leads-education" method="POST" data-netlify="true" action="/success" class="space-y-4">
+                <input type="hidden" name="form-name" value="leads-education" />
+                <input type="hidden" name="tipo_solicitacao" id="edu-tipo" value="" />
+                <input type="hidden" name="objetivo_lead" id="edu-objetivo" value="" />
+                <div class="grid grid-cols-1 gap-4 text-left">
+                    <input type="text" name="name" required placeholder="Nome do Responsável" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                    <input type="text" name="institution" required placeholder="Instituição / Escola" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="email" name="email" required placeholder="E-mail Oficial" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                        <select name="students" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-teal-500 outline-none">
+                            <option value="100">Até 100 alunos</option>
+                            <option value="500">100 a 500 alunos</option>
+                            <option value="1000">500+ alunos</option>
                         </select>
                     </div>
+                    <textarea name="message" id="edu-textarea" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:border-teal-500 outline-none resize-none"></textarea>
                 </div>
-                <div>
-                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Mensagem / Desafio</label>
-                    <textarea name="message" id="edu-textarea" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all resize-none"></textarea>
-                </div>
-            </div>
-
-            <button type="submit" class="w-full bg-teal-600 text-white font-bold py-4 rounded-xl hover:bg-teal-700 transition-all shadow-lg shadow-teal-600/20 uppercase text-[10px] tracking-widest mt-2">
-                Enviar Solicitação Pedagógica
-            </button>
-        </form>
+                <button type="submit" class="w-full bg-teal-600 text-white font-bold py-4 rounded-xl hover:bg-teal-700 transition-all shadow-lg uppercase text-[10px] tracking-widest mt-2">Enviar Solicitação</button>
+            </form>
+        </div>
     </div>
-</div>
+
     <script>
-		const eduContexts = {
-    'oficial': {
-        title: 'Diagnóstico <span class="text-teal-600">Pedagógico</span>',
-        subtitle: 'Solicitação formal de análise para instituições de ensino.',
-        tipo: 'Education (Via Oficial)',
-        objetivo: 'Lead qualificado / Diagnóstico Pedagógico',
-        placeholder: 'Por favor, descreva o principal desafio da sua instituição (ex: Formação de Professores / Pesquisa-Ação)...'
-    },
-		'docente': {
-        title: 'Formação <span class="text-teal-600">Docente</span>',
-        subtitle: 'Workshops de literacia e ética para professores.',
-        tipo: 'Education (Docente)',
-        objetivo: 'Solicitação de Ementa / Formação',
-        placeholder: 'Gostaria de saber mais sobre os módulos de formação...'
-    },
-    'demo': {
-        title: 'Escola <span class="text-teal-600">Digital</span>',
-        subtitle: 'Demonstração do DBAR Analytics para turmas.',
-        tipo: 'Education (Demo)',
-        objetivo: 'Venda de software/serviço para escolas',
-        placeholder: 'Quais turmas ou anos letivos deseja monitorizar primeiro?'
-    },
-    'saas': {
-        title: 'Plataforma <span class="text-orange-500">SaaS</span>',
-        subtitle: 'Acesso puro à tecnologia de medição DBAR.',
-        tipo: 'Education (SaaS)',
-        objetivo: 'Assinatura de software',
-        placeholder: 'A nossa instituição já possui metodologia e precisa apenas dos dados...'
-    },
-    'agendamento': {
-        title: 'Diagnóstico <span class="text-teal-600">Estratégico</span>',
-        subtitle: 'Sessão de 30 minutos com a nossa equipa pedagógica.',
-        tipo: 'Education (Geral)',
-        objetivo: 'Lead qualificado de instituição',
-        placeholder: 'Descreva a principal urgência pedagógica da sua escola...'
-    }
-};
+        const eduContexts = {
+            'oficial': { title: 'Diagnóstico <span class="text-teal-600">Pedagógico</span>', subtitle: 'Solicitação formal de análise institucional.', tipo: 'Education (Via Oficial)', objetivo: 'Lead qualificado / Diagnóstico', placeholder: 'Descreva o principal desafio da sua instituição...' },
+            'docente': { title: 'Formação <span class="text-teal-600">Docente</span>', subtitle: 'Workshops de literacia e ética.', tipo: 'Education (Docente)', objetivo: 'Solicitação de Ementa', placeholder: 'Gostaria de saber mais sobre os módulos...' },
+            'demo': { title: 'Escola <span class="text-teal-600">Digital</span>', subtitle: 'Demonstração do DBAR Analytics.', tipo: 'Education (Demo)', objetivo: 'Venda de software/serviço', placeholder: 'Quais turmas deseja monitorizar primeiro?' },
+            'saas': { title: 'Plataforma <span class="text-orange-500">SaaS</span>', subtitle: 'Acesso à tecnologia de medição DBAR.', tipo: 'Education (SaaS)', objetivo: 'Assinatura de software', placeholder: 'Precisamos apenas dos dados para a nossa metodologia...' },
+            'agendamento': { title: 'Diagnóstico <span class="text-teal-600">Estratégico</span>', subtitle: 'Sessão de 30 minutos com a nossa equipa.', tipo: 'Education (Geral)', objetivo: 'Lead qualificado / Reunião', placeholder: 'Qual a principal urgência pedagógica?' }
+        };
 
-function openModalEdu(key) {
-    const ctx = eduContexts[key] || eduContexts['agendamento'];
-    document.getElementById('modal-edu-title').innerHTML = ctx.title;
-    document.getElementById('modal-edu-subtitle').innerText = ctx.subtitle;
-    document.getElementById('edu-textarea').placeholder = ctx.placeholder;
-    document.getElementById('edu-tipo').value = ctx.tipo;
-    document.getElementById('edu-objetivo').value = ctx.objetivo;
-
-    const modal = document.getElementById('modal-edu');
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeModalEdu() {
-    const modal = document.getElementById('modal-edu');
-    modal.classList.remove('active');
-    document.body.style.overflow = 'auto';
-}
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        function openModalEdu(key) {
+            const ctx = eduContexts[key] || eduContexts['agendamento'];
+            document.getElementById('modal-edu-title').innerHTML = ctx.title;
+            document.getElementById('modal-edu-subtitle').innerText = ctx.subtitle;
+            document.getElementById('edu-textarea').placeholder = ctx.placeholder;
+            document.getElementById('edu-tipo').value = ctx.tipo;
+            document.getElementById('edu-objetivo').value = ctx.objetivo;
+            document.getElementById('modal-edu').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
+
+        function closeModalEdu() {
+            document.getElementById('modal-edu').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModalEdu(); });
         lucide.createIcons();
     </script>
 </body>
