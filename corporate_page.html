@@ -218,25 +218,29 @@
                         <p class="text-white font-bold text-base">Agendamento Imediato</p>
                     </div>
                 </a>
-                <a href="mailto:renisantos@gmail.com?subject=Solicitação de Proposta | DBAR Corporate&body=Olá Renielton e equipa DBAR,%0A%0AGostaria de solicitar uma proposta comercial para a implementação da metodologia DBAR na nossa organização.%0A%0AAlguns detalhes preliminares:%0A- Empresa: [Nome]%0A- Número aproximado de colaboradores: [Inserir]%0A- Principal desafio atual: [Ex: Governança de IA / Shadow AI / Aumento de Produtividade]%0A%0AGostaria de agendar uma breve conversa para alinhamento inicial.%0A%0AAtenciosamente,%0A[Seu Nome]" 
-
-   target="_blank" class="glass-panel p-8 rounded-3xl flex items-center gap-6 hover:bg-blue-500/10 border-blue-500/20 transition-all group">
-
-    <div class="bg-blue-500/20 p-4 rounded-full text-blue-400 group-hover:scale-110 transition-transform">
-
-        <i data-lucide="mail" class="w-8 h-8"></i>
-
+                <form name="corporate-quote" method="POST" data-netlify="true" class="glass-panel p-8 rounded-3xl border border-blue-500/20 text-left">
+    <p class="hidden"><label>Don't fill this out if you're human: <input name="bot-field" /></label></p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+            <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest block mb-2">Nome Completo</label>
+            <input type="text" name="name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition-all">
+        </div>
+        <div>
+            <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest block mb-2">E-mail Corporativo</label>
+            <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition-all">
+        </div>
     </div>
 
-    <div class="text-left">
-
-        <p class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest mb-1">Proposta Formal</p>
-
-        <p class="text-white font-bold text-lg">Solicitar Orçamento</p>
-
+    <div class="mb-6">
+        <label class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest block mb-2">Desafio Principal (Governança, ROI, Shadow IA)</label>
+        <textarea name="message" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500 transition-all"></textarea>
     </div>
 
-</a>
+    <button type="submit" class="w-full bg-cyan-500 text-slate-950 font-bold py-4 rounded-xl hover:bg-cyan-400 transition-all shadow-lg shadow-cyan-500/20 uppercase text-xs tracking-widest">
+        Solicitar Orçamento Executivo
+    </button>
+</form>
             </div>
         </div>
     </section>
