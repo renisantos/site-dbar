@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBAR Education | Plataforma de Análise</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Space Grotesk', 'sans-serif'] },
+                    colors: {
+                        teal: { 50: '#f0fdfa', 100: '#ccfbf1', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488', 800: '#115e59', 900: '#134e4a' },
+                        orange: { 500: '#f97316' }
+                    },
+                    animation: { 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #ffffff; color: #334155; overflow: hidden; }
+        #app-layout { display: flex; height: 100vh; width: 100vw; overflow: hidden; position: relative; z-index: 10; }
+        
+        /* Grid e Triângulo de Fundo */
+        .grid-bg {
+            background-image: linear-gradient(rgba(20, 184, 166, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(20, 184, 166, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .triangle-container { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; opacity: 0.1; }
+
+        /* Sidebar */
+        .sidebar { 
+            background-color: #134e4a;
+            width: 260px; flex-shrink: 0; display: flex; flex-direction: column; 
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 50; border-right: 1px solid #115e59; color: white;
+            white-space: nowrap; overflow: hidden;
+        }
+        .sidebar.collapsed { width: 80px; }
+        .sidebar.collapsed .nav-text, .sidebar.collapsed .nav-group, .sidebar.collapsed .profile-info { display: none; }
+        .sidebar.collapsed .logo-area { justify-content: center; padding-left: 0; }
+
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 24px; color: #ccfbf1; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; min-height: 50px; font-size: 14px; font-weight: 500; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.05); color: #fff; }
+        .nav-item.active { background-color: #115e59; border-left-color: #2dd4bf; color: #fff; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: transparent; }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 32px; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px); border-radius: 12px; border: 1px solid #e2e8f0; padding: 24px; }
+        .chart-container { height: 320px; position: relative; width: 100%; }
+        
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #134e4a; color: white; padding: 12px 24px; border-radius: 8px; transform: translateY(150px); transition: transform 0.3s; z-index: 1000; }
+        .toast.show { transform: translateY(0); }
+    </style>
+</head>
+<body class="grid-bg">
+
+    <div class="triangle-container animate-pulse-slow">
+        <svg width="800" height="800" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M300 100 L500 450 L100 450 Z" stroke="#14b8a6" stroke-width="1.5" />
+        </svg>
+    </div>
+
+    <div id="toast" class="toast flex items-center gap-2 font-bold"><i data-lucide="check-circle"></i> <span id="toast-msg"></span></div>
+
+    <div id="app-layout">
+        <aside id="sidebar" class="sidebar shadow-2xl">
+           <div class="h-20 flex items-center gap-3 px-6 border-b border-teal-800/30 shrink-0">
+    <div class="bg-teal-400 p-2 rounded-lg text-teal-900 shadow-lg shadow-teal-900/20">
+        <i data-lucide="book-open-check" class="w-6 h-6"></i>
+    </div>
+    
+    <div class="nav-text font-display font-bold text-xl tracking-tight text-white">
+        DBAR <span class="font-light text-teal-300 opacity-80">.Edu</span>
+    </div>
+</div>
+            
+            <nav class="flex-1 overflow-y-auto py-4">
+                <div class="nav-group px-6 py-4 text-[10px] uppercase tracking-widest text-teal-400 font-bold opacity-60 nav-text">Análise</div>
+                <div onclick="app.nav('dashboard')" class="nav-item active" id="nav-dashboard"><i data-lucide="layout-dashboard"></i> <span class="nav-text">Visão Geral</span></div>
+                <div onclick="app.nav('activities')" class="nav-item" id="nav-activities"><i data-lucide="clipboard-list"></i> <span class="nav-text">Atividades</span></div>
+                <div onclick="app.nav('grades')" class="nav-item" id="nav-grades"><i data-lucide="graduation-cap"></i> <span class="nav-text">Pauta Digital</span></div>
+                
+                <div class="nav-group px-6 py-4 text-[10px] uppercase tracking-widest text-teal-400 font-bold opacity-60 nav-text">Gestão</div>
+                <div onclick="app.nav('report')" class="nav-item" id="nav-report"><i data-lucide="file-text"></i> <span class="nav-text">Relatório Final</span></div>
+            </nav>
+
+            <div class="p-4 border-t border-white/10 bg-teal-900/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-teal-500 flex items-center justify-center text-[10px] font-bold shrink-0 text-white">RS</div>
+                    <div class="profile-info overflow-hidden">
+                        <p class="text-xs font-bold truncate">Renielton S.</p>
+                        <p class="text-[10px] text-teal-300 opacity-80">Super Admin</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="h-20 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-8 shrink-0 z-20">
+                <div class="flex items-center gap-4">
+                    <button onclick="app.toggleSidebar()" class="p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition border border-transparent hover:border-slate-200">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <div class="h-6 w-px bg-slate-200 mx-2 hidden md:block"></div>
+                    <h1 class="text-sm font-bold text-slate-600 uppercase tracking-widest" id="page-title">Visão Geral</h1>
+                </div>
+
+                <a href="education_page.html" class="flex items-center gap-3 text-slate-600 hover:text-teal-600 transition-all group">
+                    <div class="flex items-center gap-2 bg-slate-100 p-2 rounded-lg border border-slate-200 group-hover:border-teal-300 group-hover:bg-teal-50 transition-all">
+                        <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.2em] font-display hidden sm:block">Voltar ao DBAR.Education</span>
+                </a>
+            </header>
+
+            <div class="scroll-area">
+                <div id="view-dashboard" class="tab-content active space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="card border-l-4 border-teal-500">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Crescimento Confiança</label>
+                            <div class="text-3xl font-display font-bold text-slate-800 mt-1" id="kpi-growth">+35%</div>
+                        </div>
+                        <div class="card border-l-4 border-orange-500">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Média da Turma</label>
+                            <div class="text-3xl font-display font-bold text-slate-800 mt-1">16.4</div>
+                        </div>
+                        <div class="card border-l-4 border-indigo-500">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Shadow IA Risk</label>
+                            <div class="text-3xl font-display font-bold text-red-500 mt-1">Baixo</div>
+                        </div>
+                        <div class="card border-l-4 border-slate-300">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Alunos Online</label>
+                            <div class="text-3xl font-display font-bold text-slate-800 mt-1">12</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="card">
+                            <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i data-lucide="line-chart" class="w-4 h-4 text-teal-600"></i> Evolução Metacognitiva</h3>
+                            <div class="chart-container"><canvas id="chartConf"></canvas></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i data-lucide="pie-chart" class="w-4 h-4 text-teal-600"></i> Ecossistema de IA Usado</h3>
+                            <div class="chart-container"><canvas id="chartTools"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-grades" class="tab-content">
+                    <div class="card p-0 overflow-hidden">
+                        <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <h2 class="font-display font-bold text-slate-800">Pauta Digital Dinâmica</h2>
+                            <button class="bg-teal-600 text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-teal-700 transition">Exportar Relatório</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-slate-600">
+                                <thead class="bg-slate-50 text-xs text-slate-500 uppercase">
+                                    <tr>
+                                        <th class="px-6 py-4 font-bold">Aluno</th>
+                                        <th class="px-6 py-4 text-center">Prompting</th>
+                                        <th class="px-6 py-4 text-center">Ética</th>
+                                        <th class="px-6 py-4 text-center">Técnica</th>
+                                        <th class="px-6 py-4 text-center font-bold text-teal-600 bg-teal-50">Média</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="grades-body" class="divide-y divide-slate-100">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-activities" class="tab-content">
+                    <div class="card text-center py-20 border-dashed border-2 border-slate-300 bg-slate-50/50">
+                        <div class="bg-slate-100 p-4 rounded-full inline-block mb-4"><i data-lucide="construction" class="w-8 h-8 text-slate-400"></i></div>
+                        <h2 class="text-xl font-bold text-slate-600">Gestão de Atividades</h2>
+                        <p class="text-slate-400 text-sm mt-2">Módulo em sincronização com o Google Classroom.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const app = {
+            init: () => {
+                lucide.createIcons();
+                app.renderGrades();
+                app.initCharts();
+            },
+
+            nav: (id) => {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById('view-' + id).classList.add('active');
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                document.getElementById('nav-' + id).classList.add('active');
+                
+                // Mapeamento de Títulos
+                const titles = {
+                    'dashboard': 'Visão Geral',
+                    'activities': 'Gestão de Atividades',
+                    'grades': 'Pauta Digital',
+                    'report': 'Relatórios'
+                };
+                document.getElementById('page-title').textContent = titles[id];
+                
+                if(id === 'dashboard') app.initCharts();
+            },
+
+            toggleSidebar: () => {
+                document.getElementById('sidebar').classList.toggle('collapsed');
+            },
+
+            renderGrades: () => {
+                const data = [
+                    { name: "Ana Araújo", p: 18, e: 19, t: 17, avg: 18.0 },
+                    { name: "Bruno Costa", p: 14, e: 15, t: 16, avg: 15.0 },
+                    { name: "Catarina Fontes", p: 19, e: 20, t: 19, avg: 19.3 },
+                    { name: "Daniel Reis", p: 10, e: 12, t: 11, avg: 11.0 }
+                ];
+                document.getElementById('grades-body').innerHTML = data.map(s => `
+                    <tr class="hover:bg-teal-50/30 transition cursor-default">
+                        <td class="px-6 py-4 font-bold text-slate-700">${s.name}</td>
+                        <td class="px-6 py-4 text-center">${s.p}</td>
+                        <td class="px-6 py-4 text-center">${s.e}</td>
+                        <td class="px-6 py-4 text-center">${s.t}</td>
+                        <td class="px-6 py-4 text-center font-black text-teal-700 bg-teal-50/30">${s.avg}</td>
+                    </tr>
+                `).join('');
+            },
+
+            initCharts: () => {
+                if(window.myChart1) window.myChart1.destroy();
+                if(window.myChart2) window.myChart2.destroy();
+
+                const ctx1 = document.getElementById('chartConf').getContext('2d');
+                window.myChart1 = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Inicial', 'Intermédio', 'Final'],
+                        datasets: [{
+                            label: 'Confiança %',
+                            data: [35, 62, 88],
+                            backgroundColor: ['#99f6e4', '#2dd4bf', '#0d9488'],
+                            borderRadius: 6,
+                            barPercentage: 0.6
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { display: false }, x: { grid: { display: false } } }
+                    }
+                });
+
+                const ctx2 = document.getElementById('chartTools').getContext('2d');
+                window.myChart2 = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['ChatGPT', 'Gemini', 'Copilot', 'Outros'],
+                        datasets: [{
+                            data: [45, 25, 20, 10],
+                            backgroundColor: ['#0d9488', '#14b8a6', '#5eead4', '#ccfbf1'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        cutout: '75%',
+                        plugins: { legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8 } } }
+                    }
+                });
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', app.init);
+    </script>
+</body>
+</html>

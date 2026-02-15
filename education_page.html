@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBAR Education | Hub Pedagógico</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        teal: { 500: '#14b8a6', 600: '#0d9488', 900: '#134e4a' },
+                        orange: { 400: '#fb923c', 500: '#f97316' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #ffffff; color: #334155; overflow-x: hidden; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0d9488, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .step-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .step-card:hover { 
+            transform: translateY(-5px) scale(1.02); 
+            border-color: #14b8a6;
+            box-shadow: 0 15px 30px -10px rgba(20, 184, 166, 0.15);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-orange-100 selection:text-orange-600">
+
+    <nav class="fixed w-full z-50 glass-panel border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                
+                <div class="flex items-center gap-3">
+                    <a href="#inicio" class="flex items-center gap-3">
+                        <div class="bg-teal-50 p-1.5 rounded-lg border border-teal-100">
+                            <i data-lucide="book-open-check" class="w-5 h-5 text-teal-600"></i>
+                        </div>
+                        <span class="text-lg font-display font-bold text-slate-800 tracking-tight">
+                            DBAR. <span class="text-teal-600 font-medium">Edu</span>
+                        </span>
+                    </a>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="hidden lg:flex items-center gap-6 border-r border-slate-200 pr-6">
+                        <a href="#inicio" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Início</a>
+                        <a href="#metodologia" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Metodologia</a>
+                        <a href="#programas" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Soluções</a>
+                        <a href="#contato" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">
+                            Agendar Diagnóstico
+                        </a>
+                    </div>
+
+                    <a href="index.html" class="flex items-center gap-2 text-slate-500 hover:text-teal-600 transition-all group">
+                        <div class="flex items-center gap-2 bg-black/5 p-2 rounded-lg group-hover:bg-teal-50">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>    
+			<i data-lucide="layout-grid" class="w-4 h-4"></i>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:block">Voltar ao Hub</span>
+                    </a>
+
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-600">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 border-b border-slate-200 px-6 py-8 space-y-6">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Início</a>
+            <a href="#metodologia" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Metodologia</a>
+            <a href="#programas" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-500">Soluções</a>
+            <a href="#contato" onclick="toggleMobileMenu()" class="block bg-teal-600 text-white text-center py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest">Agendar Diagnóstico</a>
+        </div>
+    </nav>
+
+    <section id="inicio" class="relative pt-32 pb-16 lg:pt-40 lg:pb-24 overflow-hidden bg-white">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-50/50 rounded-full blur-[100px] -z-10 translate-x-1/4"></div>
+        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center lg:text-left">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-teal-200 bg-teal-50 text-teal-700 text-[10px] font-bold uppercase tracking-widest mb-6">
+                        <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
+                        Inovação Pedagógica Validada Internacionalmente IEEE
+                    </div>
+                    <h1 class="text-3xl md:text-5xl font-display font-bold text-slate-900 leading-tight mb-6 tracking-tighter">
+                        Leve a IA para a escola. <br/>
+                        <span class="gradient-text">Avalie a aprendizagem.</span>
+                    </h1>
+                    <p class="text-sm md:text-base text-slate-600 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                        Capacite professores e alunos no uso ético de LLMs. O método DBAR transforma ferramentas digitais em pensamento crítico mensurável.
+                    </p>
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+                        <a href="dbar_education_plataform.html" class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-teal-600/20">
+                            <span>Ver Demo</span>
+                            <i data-lucide="play-circle" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#metodologia" class="glass-panel text-slate-700 border border-slate-200 px-6 py-3 rounded-xl text-sm font-semibold transition-all">
+                            Ler Metodologia
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative max-w-sm mx-auto lg:max-w-none">
+                    <div class="glass-panel rounded-2xl p-5 border border-teal-100 relative transform lg:-rotate-2 hover:rotate-0 transition-all duration-500 shadow-xl bg-white/40">
+                        <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                            <h3 class="text-xs font-bold text-slate-800 uppercase tracking-widest">Turma 12º B</h3>
+                            <span class="px-2 py-0.5 bg-teal-50 text-teal-700 text-[9px] font-bold rounded border border-teal-100 uppercase">ROI Pedagógico</span>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1"><span class="text-slate-500 font-medium uppercase">Pensamento Crítico</span><span class="text-teal-700 font-bold">+24%</span></div>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-teal-500 h-full w-[74%]"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] mb-1"><span class="text-slate-500 font-medium uppercase">Confiança Digital</span><span class="text-orange-600 font-bold">4.8/5.0</span></div>
+                                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden"><div class="bg-orange-400 h-full w-[88%]"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="metodologia" class="py-20 bg-slate-50/50 border-t border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 tracking-tight uppercase">Metodologia - Triangulação em Instituições de Ensino</h2>
+            <p class="text-slate-500 text-sm mb-12 max-w-xl mx-auto">Cruzamos evidências técnicas com processos de reflexão humana.</p>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-panel p-6 rounded-2xl step-card text-left bg-white">
+                    <div class="text-[10px] font-bold text-teal-600 mb-4 opacity-50 uppercase tracking-widest">Passo 01</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Evidência</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Análise de prompts e projetos para entender o comportamento criativo dos alunos.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl step-card text-left border-orange-200 bg-orange-50/20">
+                    <div class="text-[10px] font-bold text-orange-600 mb-4 uppercase tracking-widest">Passo 02</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Reflexão</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Validação da "Confiança Digital" através de diários de bordo e metacognição.</p>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl step-card text-left bg-white">
+                    <div class="text-[10px] font-bold text-slate-400 mb-4 uppercase tracking-widest">Passo 03</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Intervenção</h3>
+                    <p class="text-slate-500 text-xs leading-relaxed">Dashboards para o professor agir em casos de vulnerabilidade cognitiva.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="programas" class="py-20 bg-slate-50 border-y border-slate-200">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 tracking-tight uppercase">Soluções para Instituições</h2>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="glass-panel p-6 rounded-2xl hover:border-teal-400 transition-all bg-white flex flex-col justify-between">
+                <div>
+                    <div class="mb-4 text-teal-600 bg-teal-50 w-12 h-12 rounded-xl flex items-center justify-center border border-teal-100">
+                        <i data-lucide="users" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Formação Docente</h3>
+                    <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Workshops imersivos para capacitar professores no uso ético de IA e avaliação de competências.</p>
+                </div>
+                <a href="mailto:renisantos@gmail.com?subject=Solicitação de Ementa | Formação Docente DBAR&body=Olá equipa DBAR,%0A%0AGostaria de receber a ementa completa e os módulos dos workshops de Formação Docente." 
+                   target="_blank" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                    Solicitar Ementa
+                </a>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl border-teal-500 ring-4 ring-teal-500/5 bg-white relative transform md:-translate-y-4 shadow-xl flex flex-col justify-between">
+                <div class="absolute top-0 right-0 bg-teal-600 text-white text-[8px] font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-widest">Destaque</div>
+                <div>
+                    <div class="mb-4 text-white bg-teal-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/20">
+                        <i data-lucide="school" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Escola Digital</h3>
+                    <p class="text-slate-500 text-[11px] mb-6 leading-relaxed">Implementação do DBAR Analytics no currículo, com licenças completas e suporte pedagógico.</p>
+                </div>
+                <a href="https://wa.me/351935890108?text=Olá!%20Gostaria%20de%20agendar%20uma%20demonstração%20técnica%20do%20programa%20Escola%20Digital." 
+                   target="_blank" rel="noopener noreferrer"
+                   class="block w-full py-2.5 text-center bg-teal-500 rounded-lg text-white font-bold hover:bg-teal-600 transition-colors shadow-md text-[10px] uppercase tracking-widest">
+                    Testar Demo
+                </a>
+            </div>
+
+            <div class="glass-panel p-6 rounded-2xl hover:border-orange-400 transition-all bg-white flex flex-col justify-between">
+                <div>
+                    <div class="mb-4 text-orange-500 bg-orange-50 w-12 h-12 rounded-xl flex items-center justify-center border border-orange-100">
+                        <i data-lucide="layout" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Plataforma SaaS</h3>
+                    <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Acesso puro à tecnologia para escolas que já possuem metodologia própria mas precisam de dados.</p>
+                </div>
+                <a href="https://wa.me/351935890108?text=Olá!%20Tenho%20interesse%20em%20conhecer os%20planos%20da%20Plataforma%20SaaS%20DBAR." 
+                   target="_blank" rel="noopener noreferrer"
+                   class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                    Ver Planos
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="contato" class="py-20 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 uppercase tracking-tighter">Lidere a Inovação</h2>
+        <p class="text-slate-500 mb-10 text-xs italic">Transforme a sua instituição numa referência global em pedagogia com IA.</p>
+        
+        <div class="grid sm:grid-cols-2 gap-4 text-left">
+            <a href="https://wa.me/351935890108?text=Olá!%20Venho%20da%20página%20Education%20e%20gostaria%20de%20agendar%20o%20Diagnóstico%20Estratégico%20de%2030%20min." 
+               target="_blank" rel="noopener noreferrer" 
+               class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group">
+                <div class="bg-teal-500 p-3 rounded-full text-white shadow-md group-hover:scale-110 transition-transform">
+                    <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-0.5">Ação Pedagógica</p>
+                    <p class="text-slate-800 font-bold text-base leading-tight">Agendar Diagnóstico</p>
+                </div>
+            </a>
+
+            <a href="mailto:renisantos@gmail.com?subject=Interesse em Diagnóstico Pedagógico | DBAR Education&body=Olá equipa DBAR,%0A%0ATemos interesse em conhecer melhor como a plataforma DBAR Analytics pode ajudar a nossa instituição de ensino na monitorização do uso de IA.%0A%0ADetalhes da Instituição:%0A- Nome da Escola/Universidade: [Inserir]%0A- Número de alunos/turmas previstas: [Inserir]%0A- Principal desafio: [Ex: Formação de Professores / Pesquisa-Ação]%0A%0AQual seria a vossa disponibilidade para uma demonstração técnica?%0A%0ACom os melhores cumprimentos,%0A[Seu Nome]" 
+               target="_blank" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group">
+                <div class="bg-teal-50 p-3 rounded-full text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all">
+                    <i data-lucide="mail" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
+                    <p class="text-slate-800 font-bold text-base leading-tight">Enviar um E-mail</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+    <footer class="py-10 text-center bg-white border-t border-slate-100 opacity-60">
+        <div class="flex items-center justify-center gap-3 mb-3">
+            <img src="logo_dbar.png" alt="DBAR" class="h-5 w-auto grayscale">
+            <span class="font-bold text-slate-400 uppercase tracking-[0.3em] text-[9px]">Education Division</span>
+        </div>
+        <p class="text-slate-500 text-[9px] uppercase tracking-widest">&copy; 2026 DBAR Solutions. Lisboa • Brasília • Global</p>
+    </footer>
+
+    <a href="#inicio" class="fixed bottom-6 right-6 z-[60] bg-teal-500/10 backdrop-blur-md border border-teal-500/20 p-3 rounded-full text-teal-600 hover:bg-teal-500 hover:text-white transition-all shadow-md hover:scale-110 active:scale-95">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </a>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        lucide.createIcons();
+    </script>
+</body>
+</html>

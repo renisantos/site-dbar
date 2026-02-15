@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBAR Analytics | Corporate Premium</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        bg: { deep: '#020617', sidebar: '#05070a' },
+                        neon: { cyan: '#00F0FF', purple: '#7c3aed', red: '#FF2A6D' }
+                    },
+                    fontFamily: { 
+                        tech: ['Orbitron', 'sans-serif'], 
+                        display: ['Space Grotesk', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif']
+                    },
+                    animation: { 'pulse-slow': 'pulse 4s infinite' }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #020617; color: #fff; overflow: hidden; }
+        
+        /* Sidebar Logic */
+        .sidebar { 
+            width: 260px; flex-shrink: 0; display: flex; flex-direction: column; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 50; border-right: 1px solid rgba(255,255,255,0.05);
+            background: #05070a;
+        }
+        .sidebar.collapsed { width: 80px; }
+        .sidebar.collapsed .nav-text, .sidebar.collapsed .nav-group { display: none; }
+        
+        /* Navigation Links */
+        .nav-link { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 24px; 
+            color: #94a3b8; cursor: pointer; transition: all 0.2s; 
+            border-left: 3px solid transparent; 
+        }
+        .nav-link:hover, .nav-link.active { 
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%); 
+            color: #fff; border-left-color: #00F0FF; 
+        }
+
+        /* UI elements */
+        .grid-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 16px; }
+        .chart-container { height: 300px; position: relative; width: 100%; }
+        
+        /* Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden grid-bg">
+
+    <aside id="sidebar" class="sidebar shadow-2xl">
+        <div class="h-20 flex items-center gap-3 px-6 border-b border-white/5 shrink-0">
+            <div class="bg-cyan-500/10 p-2 rounded-lg border border-cyan-500/30 text-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+                <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+            </div>
+            <div class="nav-text font-display font-bold text-xl tracking-tight text-white">
+                DBAR <span class="text-cyan-400 font-light">.Corp</span>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-6 custom-scroll">
+            <div class="nav-group px-6 mb-2 text-[10px] uppercase tracking-widest text-slate-500 font-bold">Monitorização</div>
+            <div class="nav-link active"><i data-lucide="layout-dashboard" class="w-5 h-5"></i> <span class="nav-text">Visão Geral</span></div>
+            <div class="nav-link"><i data-lucide="shield-alert" class="w-5 h-5 text-neon-red"></i> <span class="nav-text font-semibold">Shadow IA Risk</span></div>
+            <div class="nav-link"><i data-lucide="users" class="w-5 h-5"></i> <span class="nav-text">Auditoria Equipa</span></div>
+            
+            <div class="nav-group px-6 mt-8 mb-2 text-[10px] uppercase tracking-widest text-slate-500 font-bold">Estratégia</div>
+            <div class="nav-link"><i data-lucide="trending-up" class="w-5 h-5"></i> <span class="nav-text">ROI de Produtividade</span></div>
+        </nav>
+
+        <div class="p-4 border-t border-white/5 bg-black/20">
+            <div class="flex items-center gap-3">
+                <img src="https://ui-avatars.com/api/?name=RS&background=00F0FF&color=000" class="w-8 h-8 rounded-lg">
+                <div class="nav-text">
+                    <p class="text-xs font-bold">Renielton S.</p>
+                    <p class="text-[9px] text-slate-500 uppercase">Super Admin</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        
+        <header class="h-20 bg-bg-deep/50 backdrop-blur-md border-b border-white/5 flex items-center justify-between px-8 shrink-0 z-20">
+            <div class="flex items-center gap-4">
+                <button onclick="toggleSidebar()" class="p-2 rounded-lg hover:bg-white/5 text-slate-400 transition">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <h1 class="text-sm font-tech text-white tracking-[0.2em] uppercase">
+                    Análise de <span class="text-neon-cyan">Vulnerabilidade</span>
+                </h1>
+            </div>
+
+            <a href="corporate_page.html" class="flex items-center gap-3 text-slate-400 hover:text-cyan-400 transition-all group">
+                <div class="flex items-center gap-2 bg-slate-800/40 p-2 rounded-lg border border-white/5 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-all shadow-lg">
+                    <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                    <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-[0.2em] font-display hidden md:block">Voltar ao DBAR.Corp</span>
+            </a>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 custom-scroll space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel p-6 border-l-4 border-neon-cyan">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Impacto ROI</p>
+                    <h3 class="font-tech text-2xl text-white">+12.4k€ <span class="text-xs text-green-400">/mês</span></h3>
+                </div>
+                <div class="glass-panel p-6 border-l-4 border-neon-purple">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Adoção de IA</p>
+                    <h3 class="font-tech text-2xl text-white">88%</h3>
+                </div>
+                <div class="glass-panel p-6 border-l-4 border-neon-red bg-neon-red/5">
+                    <p class="text-neon-red text-[10px] font-bold uppercase mb-1">Shadow IA Detected</p>
+                    <h3 class="font-tech text-2xl text-white">14.2%</h3>
+                </div>
+                <div class="glass-panel p-6 border-l-4 border-slate-500">
+                    <p class="text-slate-500 text-[10px] font-bold uppercase mb-1">Status Sistema</p>
+                    <h3 class="font-tech text-2xl text-neon-cyan">ACTIVE</h3>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="glass-panel p-6 lg:col-span-2">
+                    <h3 class="font-display font-bold text-sm text-slate-300 mb-6 uppercase tracking-widest">Matriz de Triangulação (Performance vs Confiança)</h3>
+                    <div class="chart-container">
+                        <canvas id="triangulationChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-panel p-6">
+                    <h3 class="font-display font-bold text-sm text-slate-300 mb-6 uppercase tracking-widest text-center">Auditoria Skills</h3>
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel overflow-hidden">
+                <div class="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-white/5">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Detecções Shadow IA (Real-time)</h3>
+                    <span class="text-[9px] text-neon-red font-bold animate-pulse">ALERTA DE SEGURANÇA</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-black/40 text-slate-500 uppercase font-bold">
+                            <tr>
+                                <th class="px-6 py-4">Utilizador</th>
+                                <th class="px-6 py-4">Anomalia Detetada</th>
+                                <th class="px-6 py-4 text-right">Risco</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/5 font-mono">
+                            <tr class="hover:bg-white/5 transition cursor-pointer">
+                                <td class="px-6 py-4 text-cyan-400">#USR_8821</td>
+                                <td class="px-6 py-4 text-slate-400 italic">Padrão Copy/Paste (Input externo não filtrado)</td>
+                                <td class="px-6 py-4 text-right"><span class="text-neon-red bg-neon-red/10 px-2 py-1 rounded border border-neon-red/20 text-[10px] font-bold">CRITICAL</span></td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition cursor-pointer">
+                                <td class="px-6 py-4 text-cyan-400">#USR_9942</td>
+                                <td class="px-6 py-4 text-slate-400 italic">Divergência técnica: Nota alta / Confiança baixa</td>
+                                <td class="px-6 py-4 text-right"><span class="text-orange-400 bg-orange-400/10 px-2 py-1 rounded border border-orange-400/20 text-[10px] font-bold">MEDIUM</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+            setTimeout(() => {
+                window.chart1.resize();
+                window.chart2.resize();
+            }, 350);
+        }
+
+        lucide.createIcons();
+        Chart.register(ChartDataLabels);
+        Chart.defaults.color = '#64748b';
+
+        // Gráfico Triangulação (Scatter)
+        const ctx1 = document.getElementById('triangulationChart').getContext('2d');
+        window.chart1 = new Chart(ctx1, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    data: Array.from({length: 30}, () => ({ x: Math.random()*100, y: Math.random()*100 })),
+                    backgroundColor: (ctx) => (ctx.raw.y > 80 && ctx.raw.x < 40) ? '#FF2A6D' : '#00F0FF',
+                    pointRadius: 6,
+                    hoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, datalabels: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Nível de Confiança %', font: { size: 9 } } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, title: { display: true, text: 'Performance Real', font: { size: 9 } } }
+                }
+            }
+        });
+
+        // Gráfico Skills (Radar)
+        const ctx2 = document.getElementById('skillsChart').getContext('2d');
+        window.chart2 = new Chart(ctx2, {
+            type: 'radar',
+            data: {
+                labels: ['Crítico', 'Ética', 'Técnica', 'Prompting', 'ROI'],
+                datasets: [{
+                    data: [85, 70, 92, 65, 80],
+                    backgroundColor: 'rgba(124, 58, 237, 0.2)',
+                    borderColor: '#7c3aed',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#00F0FF'
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        angleLines: { color: 'rgba(255,255,255,0.05)' },
+                        pointLabels: { font: { family: 'Orbitron', size: 9 } },
+                        ticks: { display: false }
+                    }
+                },
+                plugins: { legend: { display: false }, datalabels: { color: '#fff', font: { size: 9 } } }
+            }
+        });
+    </script>
+</body>
+</html>

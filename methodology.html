@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metodologia DBAR | A Ciência da Medição</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: [ 'Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        violet: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 900: '#4c1d95' },
+                        cyan: { 400: '#22d3ee' },
+                        teal: { 400: '#2dd4bf' },
+                    },
+                    animation: {
+                        'spin-slow': 'spin-reverse 12s linear infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s infinite',
+                    },
+                    keyframes: {
+                        'spin-reverse': { 'from': { transform: 'rotate(360deg)' }, 'to': { transform: 'rotate(0deg)' } },
+                        float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+                        pulseGlow: { '0%, 100%': { opacity: 0.6, filter: 'blur(20px)' }, '50%': { opacity: 1, filter: 'blur(25px)' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #0f0518; color: #e9d5ff; overflow-x: hidden; }
+        .glass-purple {
+            background: rgba(46, 16, 101, 0.6);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #a78bfa, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .grid-bg {
+            background-image: linear-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(124, 58, 237, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black, transparent 85%);
+        }
+        .nav-link { @apply text-[9px] font-bold uppercase tracking-[0.2em] text-violet-200/60 hover:text-white transition-colors; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="fixed w-full z-50 glass-purple border-b border-violet-500/20">
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+            <div class="flex justify-between items-center h-20">
+
+                
+
+                <div class="flex items-center gap-3 shrink-0">
+
+                    <div class="bg-violet-500/20 p-2 rounded-lg border border-violet-500/30">
+
+                        <i data-lucide="triangle" class="w-6 h-6 text-violet-400 fill-violet-400/20 transform rotate-180"></i>
+
+                    </div>
+
+                    <span class="text-xl font-display font-bold text-white tracking-tight">
+
+                        DBAR <span class="text-violet-400">Methodology</span>
+
+                    </span>
+
+                </div>
+
+
+
+                <div class="flex items-center gap-4">
+
+                    <div class="hidden lg:flex items-center gap-8 border-r border-white/10 pr-8">
+
+                        <a href="#inicio" class="text-[10px] font-bold uppercase tracking-widest text-violet-200/60 hover:text-white transition-colors">Início</a>
+
+                        <a href="#aplicacoes" class="text-[10px] font-bold uppercase tracking-widest text-violet-200/60 hover:text-white transition-colors">Aplicações</a>
+
+                        <a href="#evolucao" class="text-[10px] font-bold uppercase tracking-widest text-violet-200/60 hover:text-white transition-colors">Evolução</a>
+
+                        
+
+                        <a href="#contato" class="bg-white text-black px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-all shadow-lg shadow-white/5">
+
+                            Falar com Especialista
+
+                        </a>
+
+                    </div>
+
+
+
+                    <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-all group shrink-0">
+
+                        <div class="flex items-center gap-2 bg-slate-800/40 p-2 rounded-lg border border-white/5 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-all">
+
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+
+                        </div>
+
+                        <span class="text-xs font-bold uppercase tracking-[0.1em] font-display hidden sm:block">Voltar ao Hub</span>
+
+                    </a>
+
+
+
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-violet-300">
+
+                        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div id="mobile-menu" class="hidden lg:hidden bg-[#0f0518]/95 backdrop-blur-2xl border-b border-violet-500/20">
+
+            <div class="px-8 py-10 space-y-8">
+
+                <a href="#inicio" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-violet-200">
+
+                    <i data-lucide="activity" class="w-5 h-5 text-violet-400"></i> Início
+
+                </a>
+
+                <a href="#aplicacoes" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-violet-200">
+
+                    <i data-lucide="layers" class="w-5 h-5 text-violet-400"></i> Aplicações
+
+                </a>
+
+                <a href="#evolucao" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-violet-200">
+
+                    <i data-lucide="trending-up" class="w-5 h-5 text-violet-400"></i> Evolução
+
+                </a>
+
+                <div class="h-px bg-white/5 w-full"></div>
+
+                <a href="#contato" onclick="toggleMobileMenu()" class="bg-cyan-500 text-slate-900 w-full py-4 rounded-xl font-bold uppercase tracking-widest flex items-center justify-center gap-3">
+
+                    <i data-lucide="message-circle" class="w-5 h-5"></i> Falar com Especialista
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <section class="relative pt-32 pb-16 overflow-hidden">
+        <div class="absolute inset-0 grid-bg -z-10"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[120px] animate-pulse-glow -z-10"></div>
+
+        <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/40 bg-violet-900/30 text-violet-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 animate-float">
+                <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+                Validada Cientificamente - IEEE
+            </div>
+            
+            <h1 id="inicio" class="text-3xl md:text-5xl font-display font-bold text-white leading-tight mb-6 tracking-tighter">
+                Não é magia. <br/>
+                É <span class="text-gradient">Triangulação Dinâmica</span>.
+            </h1>
+            
+            <p class="text-sm md:text-base text-violet-200/70 max-w-xl mx-auto leading-relaxed mb-10">
+                Revelamos a "caixa preta" da IA. Transformamos o sentimento de uso em dados mistos acionáveis através de rigor científico.
+            </p>
+
+            <div class="relative w-full max-w-2xl mx-auto py-8">
+                <div class="flex justify-between items-center px-4 md:px-20">
+                    <div class="flex flex-col items-center gap-3 group">
+                        <div class="w-12 h-12 rounded-xl bg-slate-900 border border-cyan-500/30 flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
+                            <i data-lucide="bar-chart-2" class="w-6 h-6 text-cyan-400"></i>
+                        </div>
+                        <p class="text-[9px] font-bold uppercase tracking-widest text-cyan-400">Hard Data<br>(ROI)</p>
+                    </div>
+
+                    <div class="relative w-20 h-20 flex items-center justify-center">
+                        <div class="absolute inset-0 border border-dashed border-violet-500/30 rounded-full animate-spin-slow"></div>
+                        <i data-lucide="triangle" class="w-8 h-8 text-violet-400 animate-pulse"></i>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-3 group">
+                        <div class="w-12 h-12 rounded-xl bg-slate-900 border border-teal-500/30 flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
+                            <i data-lucide="brain-circuit" class="w-6 h-6 text-teal-400"></i>
+                        </div>
+                        <p class="text-[9px] font-bold uppercase tracking-widest text-teal-400">Soft Data<br>(Cognição)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="aplicacoes" class="py-20 bg-[#0a0312] border-t border-violet-900/20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-display font-bold text-white mb-6 uppercase tracking-tight">
+                        Uma Fórmula. <br/>
+                        <span class="text-violet-400">Infinitas Aplicações.</span>
+                    </h2>
+                    <p class="text-sm text-violet-200/60 mb-8 leading-relaxed">
+                        O DBAR é agnóstico ao setor. A mesma arquitetura que calcula o lucro empresarial mede a literacia crítica de um aluno em sala de aula.
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="p-2 bg-violet-900/40 rounded-lg"><i data-lucide="layers" class="w-4 h-4 text-violet-400"></i></div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white uppercase tracking-wider">Triangulação Dinâmica</h4>
+                                <p class="text-xs text-violet-300/70">Cruzamento de performance técnica com diários de confiança.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="p-2 bg-violet-900/40 rounded-lg"><i data-lucide="refresh-cw" class="w-4 h-4 text-violet-400"></i></div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white uppercase tracking-wider">Ciclo Pesquisa-Ação</h4>
+                                <p class="text-xs text-violet-300/70">Sugestões de melhoria em tempo real através de Agentes Cognitivos.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="glass-purple rounded-2xl p-6 border border-violet-500/20 mb-4">
+                        <div class="flex gap-4 mb-6 border-b border-violet-500/10 pb-3">
+                            <button onclick="switchSector('corp')" id="btn-corp" class="text-[10px] font-bold uppercase tracking-widest text-cyan-400 border-b border-cyan-400 pb-2">Ambientes Corporativos</button>
+                            <button onclick="switchSector('edu')" id="btn-edu" class="text-[10px] font-bold uppercase tracking-widest text-violet-400/50 pb-2">Instituições de Ensino</button>
+                        </div>
+                        <div id="content-display" class="min-h-[180px]"></div>
+                    </div>
+                    <div class="flex items-start gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/5 opacity-50">
+                        <i data-lucide="shield-check" class="w-3 h-3 text-violet-400 shrink-0 mt-0.5"></i>
+                        <p class="text-[8px] leading-relaxed text-slate-400 uppercase tracking-widest">
+                            Conformidade IEEE e RGPD. A IA atua como suporte, mantendo o humano no centro da decisão.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="evolucao" class="py-20 bg-slate-950/30">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-2xl font-display font-bold text-white mb-4 uppercase tracking-widest">Evolução V3</h2>
+            <p class="text-xs text-violet-200/50 mb-12 uppercase tracking-[0.2em]">O futuro dos Dashboards Cognitivos</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="p-5 rounded-xl border border-violet-500/10 bg-slate-900/40">
+                    <i data-lucide="bot" class="w-5 h-5 text-violet-400 mx-auto mb-3"></i>
+                    <h3 class="font-bold text-white text-[11px] uppercase mb-2">Auto-Feedback</h3>
+                    <p class="text-[10px] text-slate-500">Correções de prompt automáticas via LLM.</p>
+                </div>
+                <div class="p-5 rounded-xl border border-violet-500/10 bg-slate-900/40">
+                    <i data-lucide="network" class="w-5 h-5 text-violet-400 mx-auto mb-3"></i>
+                    <h3 class="font-bold text-white text-[11px] uppercase mb-2">Previsão</h3>
+                    <p class="text-[10px] text-slate-500">Deteção precoce de Shadow AI.</p>
+                </div>
+                <div class="p-5 rounded-xl border border-violet-500/10 bg-slate-900/40">
+                    <i data-lucide="globe" class="w-5 h-5 text-violet-400 mx-auto mb-3"></i>
+                    <h3 class="font-bold text-white text-[11px] uppercase mb-2">Scale-Up</h3>
+                    <p class="text-[10px] text-slate-500">Arquitetura SaaS pronta para API.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="py-20 bg-[#0a0312] border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-2xl font-display font-bold text-white mb-4 uppercase tracking-tighter">Inicie a Governança</h2>
+            <p class="text-slate-500 mb-10 text-xs">Suporte técnico especializado para implementações científicas.</p>
+
+            <div class="grid sm:grid-cols-2 gap-4 text-left">
+                <a href="https://wa.me/351935890108?text=Olá!%20Venho%20da%20Metodologia%20e%20quero%20um%20Diagnóstico." target="_blank" class="glass-purple p-6 rounded-2xl flex items-center gap-5 border-violet-500/30 hover:border-violet-500/60 transition-all group">
+                    <div class="bg-violet-600 p-3 rounded-full text-white shadow-lg group-hover:scale-110 transition-transform">
+                        <i data-lucide="calendar-check" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-0.5">Diagnóstico</p>
+                        <p class="text-white font-bold text-base">Agendar Sessão</p>
+                    </div>
+                </a>
+
+                <a href="https://wa.me/351935890108?text=Tenho%20dúvidas%20técnicas%20sobre%20o%20DBAR." target="_blank" class="glass-purple p-6 rounded-2xl flex items-center gap-5 border-white/5 hover:border-violet-500/30 transition-all group">
+                    <div class="bg-slate-800 p-3 rounded-full text-slate-300 group-hover:scale-110 transition-transform">
+                        <i data-lucide="messages-square" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Técnico</p>
+                        <p class="text-white font-bold text-base">Falar com Especialista</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center border-t border-white/5 opacity-40">
+        <div class="flex items-center justify-center gap-3 mb-3">
+            <img src="logo_dbar.png" alt="DBAR" class="h-5 w-auto grayscale">
+            <span class="font-bold text-slate-500 uppercase tracking-[0.3em] text-[9px]">Methodology Division</span>
+        </div>
+        <p class="text-slate-600 text-[9px] uppercase tracking-widest">&copy; 2026 DBAR Solutions. Lisboa • Brasília</p>
+    </footer>
+
+    <a href="#inicio" class="fixed bottom-6 right-6 z-[60] bg-violet-600/10 backdrop-blur-md border border-violet-500/20 p-3 rounded-full text-violet-400 hover:bg-violet-600 hover:text-white transition-all shadow-lg hover:scale-110 active:scale-95">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </a>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function switchSector(sector) {
+            const display = document.getElementById('content-display');
+            const btnCorp = document.getElementById('btn-corp');
+            const btnEdu = document.getElementById('btn-edu');
+
+            if (sector === 'corp') {
+                btnCorp.className = "text-[10px] font-bold uppercase tracking-widest text-cyan-400 border-b border-cyan-400 pb-2 transition-all";
+                btnEdu.className = "text-[10px] font-bold uppercase tracking-widest text-violet-400/50 pb-2 hover:text-teal-400 transition-all cursor-pointer";
+                display.innerHTML = `
+                    <div class="space-y-4 animate-fade-in pt-2">
+                        <div class="flex items-center justify-between text-[8px] font-bold uppercase tracking-widest text-slate-500">
+                            <span>Input (Gasto)</span> <i data-lucide="arrow-right" class="w-3 h-3"></i> <span>Output (ROI)</span>
+                        </div>
+                        <div class="p-4 bg-slate-900/40 rounded-xl border border-slate-800">
+                            <p class="text-[11px] text-slate-300 italic">"Economia de 30% em tempo de relatórios."</p>
+                            <div class="h-1 w-full bg-slate-800 rounded-full overflow-hidden mt-3"><div class="h-full bg-cyan-500 w-[70%]"></div></div>
+                        </div>
+                        <a href="corporate_page.html" target="_blank" class="block w-full py-3 text-center bg-cyan-500 text-slate-950 font-bold rounded-lg hover:bg-cyan-400 transition-all text-[9px] uppercase tracking-widest group">
+                            Explorar DBAR Corp <i data-lucide="external-link" class="inline w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>`;
+            } else {
+                btnEdu.className = "text-[10px] font-bold uppercase tracking-widest text-teal-400 border-b border-teal-400 pb-2 transition-all";
+                btnCorp.className = "text-[10px] font-bold uppercase tracking-widest text-violet-400/50 pb-2 hover:text-cyan-400 transition-all cursor-pointer";
+                display.innerHTML = `
+                    <div class="space-y-4 animate-fade-in pt-2">
+                        <div class="flex items-center justify-between text-[8px] font-bold uppercase tracking-widest text-slate-500">
+                            <span>Input (Reflexão)</span> <i data-lucide="arrow-right" class="w-3 h-3"></i> <span>Output (Média)</span>
+                        </div>
+                        <div class="p-4 bg-slate-900/40 rounded-xl border border-slate-800">
+                            <p class="text-[11px] text-slate-300 italic">"Domínio crítico sobre as alucinações da IA."</p>
+                            <div class="h-1 w-full bg-slate-800 rounded-full overflow-hidden mt-3"><div class="h-full bg-teal-500 w-[90%]"></div></div>
+                        </div>
+                        <a href="education_page.html" target="_blank" class="block w-full py-3 text-center bg-teal-500 text-slate-950 font-bold rounded-lg hover:bg-teal-400 transition-all text-[9px] uppercase tracking-widest group">
+                            Explorar DBAR Edu <i data-lucide="external-link" class="inline w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform"></i>
+                        </a>
+                    </div>`;
+            }
+            lucide.createIcons();
+        }
+        switchSector('corp');
+    </script>
+</body>
+</html>

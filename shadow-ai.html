@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-PT" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow AI: O Risco Invisível | DBAR Solutions</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #020617; color: #fff; overflow-x: hidden; }
+        .triangle-container { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0; pointer-events: none; opacity: 0.1; }
+        .grid-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        /* Escala Reduzida para o Artigo */
+        .prose p { margin-bottom: 1.2rem; line-height: 1.7; color: #94a3b8; font-size: 0.875rem; }
+        .prose h2 { font-family: 'Space Grotesk', sans-serif; color: white; font-size: 1.25rem; margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; border-left: 3px solid #06b6d4; padding-left: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        .highlight { color: #22d3ee; font-weight: 600; }
+        .card-hover:hover { transform: translateY(-5px); border-color: #06b6d4; background: rgba(15, 23, 42, 0.9); }
+        
+        /* Efeito na Imagem do Iceberg */
+        .iceberg-image {
+            filter: drop-shadow(0 4px 12px rgba(6, 182, 212, 0.2));
+            transition: all 0.3s ease;
+	.glass-panel:hover .iceberg-image {
+            	transform: scale(1.03);
+        }
+    </style>
+</head>
+<body class="min-h-screen grid-bg relative">
+
+    <div class="triangle-container animate-pulse-slow">
+        <svg width="600" height="600" viewBox="0 0 600 600" fill="none">
+            <path d="M300 100 L500 450 L100 450 Z" stroke="#06b6d4" stroke-width="1" fill="rgba(15, 23, 42, 0.1)"/>
+        </svg>
+    </div>
+
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+            <div class="flex justify-between items-center h-20">
+
+                
+
+                <div class="flex items-center gap-3 shrink-0">
+
+                    <img src="logo_dbar.png" alt="DBAR Logo" class="h-8 w-auto">
+
+                    <span class="font-display font-bold text-white tracking-tight text-lg">DBAR.<span class="text-cyan-400">Solutions</span></span>
+
+                </div>
+
+                
+
+                <div class="flex items-center gap-4">
+
+                    <div class="hidden lg:flex items-center gap-8 border-r border-white/10 pr-8">
+
+                        <a href="#inicio" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">Início</a>
+			<a href="#causas" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">Causas</a>
+
+                        <a href="#riscos" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">Riscos</a>
+
+                        <a href="#solucao" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">Solução</a>
+
+                        
+
+                        <a href="#diagnostico" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+
+                            <span>Agendar Diagnóstico</span>
+
+                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+
+                        </a>
+
+                    </div>
+
+
+
+                    <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-all group shrink-0">
+
+                        <div class="flex items-center gap-2 bg-slate-800/40 p-2 rounded-lg border border-white/5 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-all">
+
+                            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+
+                            <i data-lucide="layout-grid" class="w-4 h-4"></i>
+
+                        </div>
+
+                        <span class="text-xs font-bold uppercase tracking-[0.1em] font-display hidden sm:block">Voltar ao Hub</span>
+
+                    </a>
+
+
+
+                    <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-400 hover:text-white">
+
+                        <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-950/95 backdrop-blur-2xl border-b border-white/5">
+
+            <div class="px-8 py-10 space-y-8">
+
+                <a href="#inicio" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-slate-300">
+
+                    <i data-lucide="help-circle" class="w-5 h-5 text-cyan-400"></i> Início
+
+                </a>
+		<a href="#causas" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-slate-300">
+
+                    <i data-lucide="help-circle" class="w-5 h-5 text-cyan-400"></i> Causas
+
+                </a>
+
+                <a href="#riscos" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-slate-300">
+
+                    <i data-lucide="alert-octagon" class="w-5 h-5 text-cyan-400"></i> Riscos
+
+                </a>
+
+                <a href="#solucao" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-slate-300">
+
+                    <i data-lucide="check-circle" class="w-5 h-5 text-cyan-400"></i> Solução
+
+                </a>
+
+                <div class="h-px bg-white/5 w-full"></div>
+
+                <a href="#diagnostico" onclick="toggleMobileMenu()" class="bg-cyan-500 text-slate-950 w-full py-4 rounded-xl font-bold uppercase flex items-center justify-center gap-3">
+
+                    <i data-lucide="shield-check" class="w-5 h-5"></i> Agendar Diagnóstico
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+    <main id="inicio" class="relative z-10 max-w-3xl mx-auto px-6 pt-24 pb-20">
+        
+        <article class="glass-panel rounded-2xl overflow-hidden shadow-2xl">
+           
+
+            <div class="p-8 md:p-12">
+                <header class="mb-10 border-b border-white/5 pb-10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-widest">
+                            Cibersegurança & IA
+                        </span>
+                        <span class="text-slate-600 text-[9px] font-bold uppercase tracking-widest font-mono">Whitepaper 2026</span>
+                    </div>
+                    
+                    <h1 class="text-3xl md:text-5xl font-display font-bold text-white leading-tight mb-6 tracking-tighter">
+                        Shadow IA: O Inimigo <span class="text-cyan-400">Invisível</span> na sua Organização
+                    </h1>
+                    
+                    <p class="text-sm md:text-base text-slate-400 leading-relaxed font-light italic border-l-2 border-cyan-500/30 pl-6">
+                        "Enquanto as chefias debatem a adoção oficial, os colaboradores já utilizam IA secretamente. Saiba como medir e mitigar este risco oculto."
+                    </p>
+                </header>
+
+                <div class="prose max-w-none">
+                    <p class="text-lg leading-relaxed mb-8">Imagine que os dados estratégicos da sua empresa estão a ser processados por servidores externos sem qualquer auditoria. Não se trata de um ataque hacker, mas de um colaborador que, na busca por eficiência, utilizou uma IA pública para "poupar tempo".</p>
+
+                    <h2 id="causas" class="mt-12 text-lg uppercase tracking-widest text-white border-l-4 border-cyan-500 pl-4">A Causa da Sombra</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-5 gap-4 my-6 items-stretch">
+    
+    <div class="md:col-span-2 glass-panel p-5 rounded-xl border border-white/5 flex flex-col justify-center relative overflow-hidden bg-slate-900/40">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-30"></div>
+        <p class="relative z-10 text-[12px] md:text-xs text-slate-400 leading-relaxed m-0">
+            A Shadow IA surge quando a busca por agilidade ignora a governança. Sem ferramentas oficiais, colaboradores utilizam versões públicas, expondo dados sensíveis ao treino de modelos externos de forma irreversível.
+        </p>
+    </div>
+
+    <div class="md:col-span-3 glass-panel p-2 rounded-xl border border-white/5 text-center group flex flex-col bg-[#050a18]">
+        <div class="overflow-hidden rounded-lg bg-black/60 flex-grow flex items-center justify-center relative min-h-[180px] max-h-[220px]">
+            <img src="shadow-ai.png" alt="Iceberg Digital" 
+                 class="h-full w-auto object-contain opacity-90 iceberg-mini group-hover:opacity-100 transition-all duration-700">
+        </div>
+        <p class="text-[2px] text-cyan-300/20 uppercase tracking-[0.1em] mt-2 mb-1">
+            Figura 1. Anatomia do Risco Invisível
+        </p>
+    </div>
+</div>
+<h2 id="riscos">Matriz de Riscos</h2>
+                <div class="grid gap-4 my-8">
+                    <div class="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5 items-start">
+                        <i data-lucide="shield-x" class="text-rose-500 w-5 h-5 shrink-0 mt-1"></i> 
+                        <div class="text-xs">
+                            <strong class="text-white block mb-1 uppercase tracking-wider">Fuga de Dados Críticos</strong>
+                            Informações sensíveis que alimentam bases de dados de terceiros de forma irreversível.
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 rounded-xl bg-white/5 border border-white/5 items-start">
+                        <i data-lucide="alert-triangle" class="text-amber-500 w-5 h-5 shrink-0 mt-1"></i> 
+                        <div class="text-xs">
+                            <strong class="text-white block mb-1 uppercase tracking-wider">Alucinação Corporativa</strong>
+                            Decisões de negócio baseadas em outputs de IA sem auditoria técnica ou humana.
+                        </div>
+                    </div>
+                </div>
+                    <h2 id="solucao">A Resposta DBAR</h2>
+                    <p>A única forma de combater a Shadow AI não é a proibição, mas a <span class="highlight">Triangulação Dinâmica</span>. É necessário medir o uso real em paralelo com o nível de literacia ética da equipa para estabelecer uma governança transparente.</p>
+                </div>
+
+                <div class="mt-16 pt-10 border-t border-white/10">
+                    <h3 class="text-xs font-bold text-white mb-6 text-center uppercase tracking-[0.3em] opacity-60">Explorar Ecossistema</h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <a href="corporate_page.html" target="_blank" class="glass-panel p-5 rounded-xl card-hover block group transition-all">
+                            <i data-lucide="building-2" class="text-cyan-400 w-5 h-5 mb-3"></i>
+                            <h4 class="font-bold text-white text-[11px] mb-1 uppercase">Corporate</h4>
+                            <p class="text-[10px] text-slate-500 leading-tight">Governança e ROI para empresas.</p>
+                        </a>
+
+                        <a href="education_page.html" target="_blank" class="glass-panel p-5 rounded-xl card-hover block group transition-all">
+                            <i data-lucide="graduation-cap" class="text-teal-400 w-5 h-5 mb-3"></i>
+                            <h4 class="font-bold text-white text-[11px] mb-1 uppercase">Education</h4>
+                            <p class="text-[10px] text-slate-500 leading-tight">Literacia e ética para escolas.</p>
+                        </a>
+
+                        <a href="methodology.html" target="_blank" class="glass-panel p-5 rounded-xl card-hover block group transition-all">
+                            <i data-lucide="triangle" class="text-violet-400 w-5 h-5 mb-3 transform rotate-180"></i>
+                            <h4 class="font-bold text-white text-[11px] mb-1 uppercase">Metodologia</h4>
+                            <p class="text-[10px] text-slate-500 leading-tight">A ciência por trás dos dados.</p>
+                        </a>
+                    </div>
+                </div>
+
+                <footer id="diagnostico" class="mt-16 pt-10 border-t border-white/5 text-center">
+                    <h3 class="font-display text-xl font-bold text-white mb-3 uppercase tracking-tighter">O seu cenário é seguro?</h3>
+                    <p class="text-slate-500 mb-8 text-xs max-w-md mx-auto">Mapeamos a vulnerabilidade da sua organização em uma sessão estratégica de 30 minutos.</p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a href="https://wa.me/351935890108?text=Olá!%20Li%20o%20artigo%20sobre%20Shadow%20AI%20e%20quero%20um%20Diagnóstico." 
+                           target="_blank" class="w-full sm:w-auto bg-cyan-500 text-slate-950 font-bold py-3 px-6 rounded-full text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2 group">
+                            <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                            Diagnóstico de Risco
+                        </a>
+
+                        <a href="https://wa.me/351935890108?text=Olá!%20Tenho%20dúvidas%20técnicas%20sobre%20as%20soluções%20DBAR." 
+                           target="_blank" class="w-full sm:w-auto glass-panel py-3 px-6 rounded-full text-[10px] text-white font-bold uppercase tracking-widest hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="messages-square" class="w-4 h-4 text-cyan-400"></i>
+                            Falar com Especialista
+                        </a>
+                    </div>
+                </footer>
+            </div>
+        </article>
+    </main>
+
+    <footer class="py-10 text-center opacity-40">
+        <p class="text-[9px] text-slate-600 uppercase tracking-[0.4em] font-semibold">
+            Lisboa • Brasília • Global | DBAR Solutions &copy; 2026
+        </p>
+    </footer>
+
+    <a href="#inicio" class="fixed bottom-6 right-6 z-[60] bg-cyan-500/10 backdrop-blur-md border border-cyan-500/20 p-3 rounded-full text-cyan-400 hover:bg-cyan-500 hover:text-slate-900 transition-all shadow-lg hover:scale-110">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </a>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        lucide.createIcons();
+    </script>
+</body>
+</html>
