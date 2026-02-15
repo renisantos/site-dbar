@@ -44,6 +44,23 @@
             border-color: #14b8a6;
             box-shadow: 0 15px 30px -10px rgba(20, 184, 166, 0.15);
         }
+		/* Estilos do Modal Education */
+#modal-edu {
+    transition: all 0.3s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+}
+#modal-edu.active {
+    visibility: visible;
+    opacity: 1;
+}
+.modal-content-edu {
+    transform: scale(0.95) translateY(10px);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#modal-edu.active .modal-content-edu {
+    transform: scale(1) translateY(0);
+}
     </style>
 </head>
 <body class="antialiased selection:bg-orange-100 selection:text-orange-600">
@@ -183,10 +200,9 @@
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Formação Docente</h3>
                     <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Workshops imersivos para capacitar professores no uso ético de IA e avaliação de competências.</p>
                 </div>
-                <a href="mailto:renisantos@gmail.com?subject=Solicitação de Ementa | Formação Docente DBAR&body=Olá equipa DBAR,%0A%0AGostaria de receber a ementa completa e os módulos dos workshops de Formação Docente." 
-                   target="_blank" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                <button onclick="openModalEdu('docente')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
                     Solicitar Ementa
-                </a>
+                </button>
             </div>
 
             <div class="glass-panel p-6 rounded-2xl border-teal-500 ring-4 ring-teal-500/5 bg-white relative transform md:-translate-y-4 shadow-xl flex flex-col justify-between">
@@ -197,30 +213,8 @@
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Escola Digital</h3>
                     <p class="text-slate-500 text-[11px] mb-6 leading-relaxed">Implementação do DBAR Analytics no currículo, com licenças completas e suporte pedagógico.</p>
-                </div>
-                <form name="education-contact" method="POST" data-netlify="true" class="bg-white p-8 rounded-3xl border border-teal-100 shadow-sm text-left">
-    <p class="hidden"><label><input name="bot-field" /></label></p>
-    
-    <div class="mb-4">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Instituição de Ensino</label>
-        <input type="text" name="institution" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition-all">
-    </div>
-
-    <div class="mb-4">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">E-mail de Contacto</label>
-        <input type="email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition-all">
-    </div>
-
-    <div class="mb-6">
-        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nº Estimado de Alunos</label>
-        <select name="students" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-teal-500 transition-all">
-            <option>Até 100</option>
-            <option>100 a 500</option>
-            <option>Mais de 500</option>
-        </select>
-    </div>
-
-    <button type="submit" class="w-full bg-teal-500 text-white font-bold py-4 rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/20 uppercase text-xs tracking-widest">
+                </div>      
+    <button onclick="openModalEdu('demo')" class="w-full bg-teal-500 text-white font-bold py-4 rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/20 uppercase text-xs tracking-widest">
         Solicitar Demonstração
     </button>
 </form>
@@ -234,11 +228,9 @@
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Plataforma SaaS</h3>
                     <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Acesso puro à tecnologia para escolas que já possuem metodologia própria mas precisam de dados.</p>
                 </div>
-                <a href="https://wa.me/351935890108?text=Olá!%20Tenho%20interesse%20em%20conhecer os%20planos%20da%20Plataforma%20SaaS%20DBAR." 
-                   target="_blank" rel="noopener noreferrer"
-                   class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                <button onclick="openModalEdu('saas')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
                     Ver Planos
-                </a>
+                </button>
             </div>
         </div>
     </div>
@@ -250,9 +242,7 @@
         <p class="text-slate-500 mb-10 text-xs italic">Transforme a sua instituição numa referência global em pedagogia com IA.</p>
         
         <div class="grid sm:grid-cols-2 gap-4 text-left">
-            <a href="https://wa.me/351935890108?text=Olá!%20Venho%20da%20página%20Education%20e%20gostaria%20de%20agendar%20o%20Diagnóstico%20Estratégico%20de%2030%20min." 
-               target="_blank" rel="noopener noreferrer" 
-               class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group">
+            <button onclick="openModalEdu('agendamento')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group">
                 <div class="bg-teal-500 p-3 rounded-full text-white shadow-md group-hover:scale-110 transition-transform">
                     <i data-lucide="calendar-check" class="w-6 h-6"></i>
                 </div>
@@ -260,18 +250,17 @@
                     <p class="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-0.5">Ação Pedagógica</p>
                     <p class="text-slate-800 font-bold text-base leading-tight">Agendar Diagnóstico</p>
                 </div>
-            </a>
+            </button>
 
-            <a href="mailto:renisantos@gmail.com?subject=Interesse em Diagnóstico Pedagógico | DBAR Education&body=Olá equipa DBAR,%0A%0ATemos interesse em conhecer melhor como a plataforma DBAR Analytics pode ajudar a nossa instituição de ensino na monitorização do uso de IA.%0A%0ADetalhes da Instituição:%0A- Nome da Escola/Universidade: [Inserir]%0A- Número de alunos/turmas previstas: [Inserir]%0A- Principal desafio: [Ex: Formação de Professores / Pesquisa-Ação]%0A%0AQual seria a vossa disponibilidade para uma demonstração técnica?%0A%0ACom os melhores cumprimentos,%0A[Seu Nome]" 
-               target="_blank" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group">
-                <div class="bg-teal-50 p-3 rounded-full text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all">
-                    <i data-lucide="mail" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
-                    <p class="text-slate-800 font-bold text-base leading-tight">Enviar um E-mail</p>
-                </div>
-            </a>
+            <button onclick="openModalEdu('oficial')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group w-full text-left">
+    <div class="bg-teal-50 p-3 rounded-full text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all">
+        <i data-lucide="mail" class="w-6 h-6"></i>
+    </div>
+    <div>
+        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
+        <p class="text-slate-800 font-bold text-base leading-tight">Enviar Pedido Formal</p>
+    </div>
+</button>
         </div>
     </div>
 </section>
@@ -287,8 +276,119 @@
     <a href="#inicio" class="fixed bottom-6 right-6 z-[60] bg-teal-500/10 backdrop-blur-md border border-teal-500/20 p-3 rounded-full text-teal-600 hover:bg-teal-500 hover:text-white transition-all shadow-md hover:scale-110 active:scale-95">
         <i data-lucide="chevron-up" class="w-5 h-5"></i>
     </a>
+<div id="modal-edu" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div onclick="closeModalEdu()" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"></div>
+    
+    <div class="modal-content-edu relative w-full max-w-xl bg-white p-8 md:p-10 rounded-3xl shadow-2xl border border-teal-100">
+        
+        <button onclick="closeModalEdu()" class="absolute top-6 right-6 text-slate-400 hover:text-teal-600 transition-colors">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
 
+        <div class="mb-8 text-left">
+            <h3 id="modal-edu-title" class="text-2xl font-display font-bold text-slate-900 mb-2 uppercase tracking-tight">
+                Solicitar <span class="text-teal-600">Apoio</span>
+            </h3>
+            <p id="modal-edu-subtitle" class="text-slate-500 text-xs">Conectando a sua instituição ao futuro da pedagogia...</p>
+        </div>
+
+        <form name="leads-education" method="POST" data-netlify="true" action="/success" class="space-y-4">
+            <input type="hidden" name="form-name" value="leads-education" />
+            <input type="hidden" name="tipo_solicitacao" id="edu-tipo" value="" />
+            <input type="hidden" name="objetivo_lead" id="edu-objetivo" value="" />
+
+            <div class="grid grid-cols-1 gap-4 text-left">
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nome do Responsável</label>
+                    <input type="text" name="name" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Instituição / Escola</label>
+                    <input type="text" name="institution" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">E-mail Oficial</label>
+                        <input type="email" name="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Nº Alunos</label>
+                        <select name="students" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all">
+                            <option value="100">Até 100</option>
+                            <option value="500">100 a 500</option>
+                            <option value="1000">500+</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Mensagem / Desafio</label>
+                    <textarea name="message" id="edu-textarea" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:border-teal-500 outline-none transition-all resize-none"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-teal-600 text-white font-bold py-4 rounded-xl hover:bg-teal-700 transition-all shadow-lg shadow-teal-600/20 uppercase text-[10px] tracking-widest mt-2">
+                Enviar Solicitação Pedagógica
+            </button>
+        </form>
+    </div>
+</div>
     <script>
+		const eduContexts = {
+    'oficial': {
+        title: 'Diagnóstico <span class="text-teal-600">Pedagógico</span>',
+        subtitle: 'Solicitação formal de análise para instituições de ensino.',
+        tipo: 'Education (Via Oficial)',
+        objetivo: 'Lead qualificado / Diagnóstico Pedagógico',
+        placeholder: 'Por favor, descreva o principal desafio da sua instituição (ex: Formação de Professores / Pesquisa-Ação)...'
+    },
+		'docente': {
+        title: 'Formação <span class="text-teal-600">Docente</span>',
+        subtitle: 'Workshops de literacia e ética para professores.',
+        tipo: 'Education (Docente)',
+        objetivo: 'Solicitação de Ementa / Formação',
+        placeholder: 'Gostaria de saber mais sobre os módulos de formação...'
+    },
+    'demo': {
+        title: 'Escola <span class="text-teal-600">Digital</span>',
+        subtitle: 'Demonstração do DBAR Analytics para turmas.',
+        tipo: 'Education (Demo)',
+        objetivo: 'Venda de software/serviço para escolas',
+        placeholder: 'Quais turmas ou anos letivos deseja monitorizar primeiro?'
+    },
+    'saas': {
+        title: 'Plataforma <span class="text-orange-500">SaaS</span>',
+        subtitle: 'Acesso puro à tecnologia de medição DBAR.',
+        tipo: 'Education (SaaS)',
+        objetivo: 'Assinatura de software',
+        placeholder: 'A nossa instituição já possui metodologia e precisa apenas dos dados...'
+    },
+    'agendamento': {
+        title: 'Diagnóstico <span class="text-teal-600">Estratégico</span>',
+        subtitle: 'Sessão de 30 minutos com a nossa equipa pedagógica.',
+        tipo: 'Education (Geral)',
+        objetivo: 'Lead qualificado de instituição',
+        placeholder: 'Descreva a principal urgência pedagógica da sua escola...'
+    }
+};
+
+function openModalEdu(key) {
+    const ctx = eduContexts[key] || eduContexts['agendamento'];
+    document.getElementById('modal-edu-title').innerHTML = ctx.title;
+    document.getElementById('modal-edu-subtitle').innerText = ctx.subtitle;
+    document.getElementById('edu-textarea').placeholder = ctx.placeholder;
+    document.getElementById('edu-tipo').value = ctx.tipo;
+    document.getElementById('edu-objetivo').value = ctx.objetivo;
+
+    const modal = document.getElementById('modal-edu');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModalEdu() {
+    const modal = document.getElementById('modal-edu');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
