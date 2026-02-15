@@ -106,7 +106,7 @@
 
                             Agendar Diagnóstico
 
-                        </button
+                        </button>
 
                     </div>
 
@@ -140,7 +140,7 @@
 
         </div>
 
-        <div id="mobile-menu" class="hidden lg:hidden bg-slate-950/95 border-b border-white/5 px-6 py-8 space-y-6">
+        <div id="mobile-menu" class="hidden lg:hidden bg-slate-950/98 backdrop-blur-xl border-b border-white/10 px-6 py-8 space-y-6">
 
 <a href="#inicio" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-400">Início</a>
 
@@ -148,7 +148,7 @@
 
             <a href="#solucoes" onclick="toggleMobileMenu()" class="block text-[10px] font-bold uppercase tracking-widest text-slate-400">Soluções</a>
 
-            <a href="#contato" onclick="toggleMobileMenu()" class="block bg-cyan-500 text-slate-900 text-center py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest">Agendar Diagnóstico</a>
+            <button onclick="openModal('agendamento'); toggleMobileMenu();" class="w-full bg-cyan-500 text-slate-900 text-center py-4 rounded-xl font-bold text-xs uppercase tracking-widest"">Agendar Diagnóstico</a>
 
         </div>
 
@@ -396,7 +396,11 @@
             'certif': { title: 'Certificação <span class="text-purple-400">DBAR</span>', subtitle: 'Parcerias B2B e Licenciamento Metodológico.', tipo: 'Corporate (Certificação)', objetivo: 'Parceria / Licenciamento', placeholder: 'Qual o perfil da sua consultoria?' },
             'agendamento': { title: 'Agendamento <span class="text-cyan-400">Imediato</span>', subtitle: 'Sessão estratégica de 30 minutos.', tipo: 'Corporate (Agendamento)', objetivo: 'Diagnóstico estratégico / Reunião comercial', placeholder: 'Sugira dois horários de preferência...' }
         };
-
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+        
         function openModal(contextKey) {
             const ctx = modalContexts[contextKey] || modalContexts['agendamento'];
             document.getElementById('modal-header-title').innerHTML = ctx.title;
@@ -413,10 +417,6 @@
             const modal = document.getElementById('modal-global');
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
 
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
