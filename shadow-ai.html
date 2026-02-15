@@ -74,6 +74,7 @@
                     <a href="#inicio" class="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-white">Início</a>
                     <a href="#causas" class="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-white">Causas</a>
                     <a href="#riscos" class="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-white">Riscos</a>
+                    <a href="#solucao" class="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-white">Solução</a>
                     <button onclick="openModal('diagnostico')" class="bg-cyan-500 text-slate-950 px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-all">Agendar Diagnóstico</button>
                 </div>
             <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-all group">
@@ -92,6 +93,8 @@
         <div id="mobile-menu" class="hidden lg:hidden bg-slate-950/98 backdrop-blur-xl border-b border-white/10 px-8 py-10 space-y-6">
             <a href="#inicio" onclick="toggleMobileMenu()" class="block text-xs font-bold uppercase tracking-widest text-slate-400">Início</a>
             <a href="#causas" onclick="toggleMobileMenu()" class="block text-xs font-bold uppercase tracking-widest text-slate-400">Causas</a>
+            <a href="#riscos" onclick="toggleMobileMenu()"class="block text-xs font-bold uppercase tracking-widest text-slate-400">Riscos</a>
+            <a href="#solucao" onclick="toggleMobileMenu()" class="block text-x font-bold uppercase tracking-widest text-slate-400">Solução</a>
             <button onclick="openModal('diagnostico'); toggleMobileMenu();" class="w-full bg-cyan-500 text-slate-950 py-4 rounded-xl font-bold text-xs uppercase tracking-widest">Agendar Diagnóstico</button>
         </div>
     </nav>
@@ -150,8 +153,29 @@
                         </div>
                     </div>
                 </div>
-                    <h2 id="solucao">A Resposta DBAR</h2>
-                    <p>A única forma de combater a Shadow AI não é a proibição, mas a <span class="highlight">Triangulação Dinâmica</span>. Medimos o uso real em paralelo com a literacia ética para estabelecer uma governança transparente.</p>
+                   <h2 id="solucao">A Resposta DBAR</h2>
+                    <p>A única forma de combater a Shadow AI não é a proibição, mas a <span class="highlight">Triangulação Dinâmica</span>. É necessário medir o uso real em paralelo com o nível de literacia ética da equipa para estabelecer uma governança transparente.</p>
+                </div>
+
+                <div class="mt-16 pt-10 border-t border-white/10">
+                    <h3 class="text-xs font-bold text-white mb-6 text-center uppercase tracking-[0.3em] opacity-60">Explorar Ecossistema</h3>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <a href="corporate_page.html" target="_blank" class="glass-panel p-5 rounded-xl card-hover block group transition-all">
+                            <i data-lucide="building-2" class="text-cyan-400 w-5 h-5 mb-3"></i>
+                            <h4 class="font-bold text-white text-[11px] mb-1 uppercase">Corporate</h4>
+                            <p class="text-[10px] text-slate-500 leading-tight">Governança e ROI para empresas.</p>
+                        </a>
+                        <a href="education_page.html" target="_blank" class="glass-panel p-5 rounded-xl card-hover block group transition-all">
+                            <i data-lucide="graduation-cap" class="text-teal-400 w-5 h-5 mb-3"></i>
+                            <h4 class="font-bold text-white text-[11px] mb-1 uppercase">Education</h4>
+                            <p class="text-[10px] text-slate-500 leading-tight">Literacia e ética para escolas.</p>
+                        </a>
+                        <a href="methodology.html" target="_blank" class="glass-panel p-5 rounded-xl card-hover block group transition-all">
+                            <i data-lucide="triangle" class="text-violet-400 w-5 h-5 mb-3 transform rotate-180"></i>
+                            <h4 class="font-bold text-white text-[11px] mb-1 uppercase">Metodologia</h4>
+                            <p class="text-[10px] text-slate-500 leading-tight">A ciência por trás dos dados.</p>
+                        </a>
+                    </div>
                 </div>
 
                 <footer id="diagnostico" class="mt-16 pt-12 border-t border-white/10 text-center">
