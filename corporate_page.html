@@ -45,13 +45,13 @@
             linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 40px 40px;
         }
-		/* Estilos Unificados do Modal */
-        #modal-corporate {
+		/* ESTILOS DO MODAL DINÂMICO */
+        #modal-global {
             transition: all 0.3s ease-in-out;
             visibility: hidden;
             opacity: 0;
         }
-        #modal-corporate.active {
+        #modal-global.active {
             visibility: visible;
             opacity: 1;
         }
@@ -59,7 +59,7 @@
             transform: scale(0.9) translateY(20px);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        #modal-corporate.active .modal-content {
+        #modal-global.active .modal-content {
             transform: scale(1) translateY(0);
         }
     </style>
@@ -83,9 +83,9 @@
 			<a href="#inicio" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-colors">Início</a>
                         <a href="#como-funciona" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-colors">Metodologia</a>
                         <a href="#solucoes" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 hover:text-white transition-colors">Soluções</a>
-                        <a href="#contato" class="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">
+                        <button onclick="openModal('agendamento')" class="bg-cyan-500 hover:bg-cyan-400 text-slate-900 px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">
                             Agendar Diagnóstico
-                        </a>
+                        </button
                     </div>
 
                     <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-all group">
@@ -123,7 +123,10 @@
                         Sua empresa paga por IA. <br/>
                         <span class="gradient-text">Nós medimos o retorno.</span>
                     </h1>
-                    <p class="text-sm md:text-base text-slate-400 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                    <button onclick="openModal('agendamento')" class="bg-white hover:bg-slate-200 text-slate-900 px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg">
+                        Começar Diagnóstico
+                    </button>
+					<p class="text-sm md:text-base text-slate-400 mb-8 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                         Transforme licenças de ChatGPT e Copilot em produtividade real com uma governança baseada em dados técnicos e humanos.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -192,7 +195,7 @@
                         <h3 class="text-lg font-bold text-white mb-2 tracking-tight">Sprint Diagnóstico</h3>
                         <p class="text-slate-400 text-[11px] mb-6 leading-relaxed">Mapeamento de 4 semanas focado em deteção de Shadow AI e riscos de segurança.</p>
                     </div>
-                   <button onclick="toggleModal()" class="bg-white hover:bg-slate-200 text-slate-900 px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg">
+                   <button onclick="openModal('sprint')" class="bg-white hover:bg-slate-200 text-slate-900 px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg">
                         Começar Diagnóstico
                     </button>
                 </div>
@@ -202,13 +205,9 @@
                         <h3 class="text-lg font-bold text-white mb-2 tracking-tight">ROI & Performance</h3>
                         <p class="text-slate-300 text-[11px] mb-6 leading-relaxed">Implementação completa de 3 meses com dashboards de monitorização em tempo real.</p>
                     </div>
-                     <a href="mailto:renisantos@gmail.com?subject=Solicitação de Proposta | ROI %26 Performance&body=Olá equipa DBAR,%0A%0AGostaria de receber uma proposta detalhada para o programa ROI %26 Performance." 
-
-          target="_blank" class="block w-full py-3 text-center bg-cyan-500 rounded-lg text-slate-900 font-bold hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/25">
-
-            Solicitar Proposta
-
-        </a>
+                     <button onclick="openModal('roi')" class="block w-full py-3 text-center bg-cyan-500 rounded-lg text-slate-900 font-bold hover:bg-cyan-400 transition-colors shadow-lg shadow-cyan-500/25 uppercase text-[10px] tracking-widest">
+    Solicitar Proposta ROI
+</button>
                 </div>
                 <div class="glass-panel p-6 rounded-2xl hover:border-purple-500/50 transition-all text-left flex flex-col justify-between">
                     <div>
@@ -216,7 +215,9 @@
                         <h3 class="text-lg font-bold text-white mb-2 tracking-tight">Certificação</h3>
                         <p class="text-slate-400 text-[11px] mb-6 leading-relaxed">Licenciamento da metodologia DBAR para consultorias e empresas parceiras.</p>
                     </div>
-                    <a href="https://wa.me/351935890108?text=Olá!%20Tenho%20interesse%20na%20Certificação%20DBAR." target="_blank" class="text-center py-2.5 border border-slate-700 rounded-lg text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-all">Parceria B2B</a>
+                     <button onclick="openModal('certif')" class="bg-white hover:bg-slate-200 text-slate-900 px-8 py-3 rounded-xl font-bold text-sm transition-all shadow-lg">
+                        Parceria B2B
+                    </button>
                 </div>
             </div>
         </div>
@@ -228,25 +229,25 @@
         <p class="text-slate-500 mb-10 text-xs uppercase tracking-widest">Escolha o seu canal de contacto técnico.</p>
         
         <div class="grid sm:grid-cols-2 gap-4 text-left">
-            <a href="https://wa.me/351935890108?text=Olá!%20Venho%20do%20site%20Corporate..." target="_blank" class="glass-panel p-6 rounded-2xl flex items-center gap-5 hover:border-cyan-500/50 transition-all group">
-                <div class="bg-cyan-500/20 p-3 rounded-full text-cyan-400 group-hover:scale-110 transition-transform">
-                    <i data-lucide="calendar-check" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <p class="text-[9px] font-bold text-cyan-500 uppercase tracking-widest mb-0.5">Diagnóstico</p>
-                    <p class="text-white font-bold text-base">Agendamento Imediato</p>
-                </div>
-            </a>
-
-            <button onclick="toggleModal()" class="glass-panel p-6 rounded-2xl flex items-center gap-5 hover:border-blue-500/50 transition-all group text-left w-full">
-                    <div class="bg-blue-500/20 p-3 rounded-full text-blue-400 group-hover:scale-110 transition-transform">
-                        <i data-lucide="mail" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-bold text-blue-400 uppercase tracking-widest mb-0.5">Proposta Formal</p>
-                        <p class="text-white font-bold text-base">Solicitar Orçamento</p>
-                    </div>
-                </button>
+            <button onclick="openModal('agendamento')" class="glass-panel p-6 rounded-2xl flex items-center gap-5 hover:border-cyan-500/50 transition-all group w-full text-left">
+    <div class="bg-cyan-500/20 p-3 rounded-full text-cyan-400 group-hover:scale-110 transition-transform">
+        <i data-lucide="calendar-days" class="w-6 h-6"></i>
+    </div>
+    <div>
+        <p class="text-[9px] font-bold text-cyan-500 uppercase tracking-widest mb-0.5">Sessão de 30min</p>
+        <p class="text-white font-bold text-base">Agendamento Imediato</p>
+    </div>
+</button>
+                    <div class="flex items-center justify-center gap-3 mb-3">
+						 <button onclick="openModal('orcamento')" class="glass-panel p-6 rounded-2xl flex items-center gap-5 hover:border-blue-500/50 transition-all group w-full text-left">
+    <div class="bg-blue-500/20 p-3 rounded-full text-blue-400 group-hover:scale-110 transition-transform">
+        <i data-lucide="calculator" class="w-6 h-6"></i>
+    </div>
+    <div>
+        <p class="text-[9px] font-bold text-blue-400 uppercase tracking-widest mb-0.5">Fase de Cotação</p>
+        <p class="text-white font-bold text-base">Solicitar Orçamento</p>
+    </div>
+</button>
         </div>
     </div>
 </section>
@@ -257,50 +258,98 @@
         </div>
         <p class="text-slate-600 text-[9px] uppercase tracking-widest">&copy; 2026 DBAR Solutions. Lisboa • Brasília</p>
     </footer>
+<div id="modal-global" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div onclick="closeModal()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md"></div>
+        <div class="modal-content relative w-full max-w-xl glass-panel p-8 md:p-10 rounded-3xl shadow-2xl bg-slate-900/95 border border-white/10">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div class="mb-8 text-left">
+                <h3 id="modal-header-title" class="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Solicitar <span class="text-cyan-400">Informação</span></h3>
+                <p id="modal-header-subtitle" class="text-slate-400 text-xs italic">A estabelecer conexão segura...</p>
+            </div>
 
+            <form name="leads-corporate" method="POST" data-netlify="true" action="/success" class="space-y-4">
+                <input type="hidden" name="form-name" value="leads-corporate" />
+                <input type="hidden" name="tipo_solicitacao" id="input-tipo-solicitacao" value="" />
+                <input type="hidden" name="objetivo_lead" id="input-objetivo-lead" value="" />
+                
+                <div class="grid grid-cols-1 gap-4">
+                    <input type="text" name="name" required placeholder="Seu Nome / Cargo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none transition-all">
+                    <input type="text" name="company" placeholder="Empresa / Organização" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none transition-all">
+                    <input type="email" name="email" required placeholder="E-mail Corporativo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none transition-all">
+                    <textarea name="message" id="modal-textarea" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 outline-none transition-all resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-cyan-500 text-slate-950 font-bold py-4 rounded-xl hover:bg-cyan-400 transition-all uppercase text-[10px] tracking-widest mt-2">Confirmar Solicitação</button>
+            </form>
+        </div>
+    </div>
     <script>
-	function toggleModal() {
-            const modal = document.getElementById('modal-corporate');
-            modal.classList.toggle('active');
-            document.body.style.overflow = modal.classList.contains('active') ? 'hidden' : 'auto';
-        }
+	// Configuração dos Contextos (Baseado na sua tabela)
+const modalContexts = {
+    'orcamento': {
+        title: 'Solicitar <span class="text-blue-400">Orçamento</span>',
+        subtitle: 'Obtenha uma estimativa personalizada para a sua governança de IA.',
+        tipo: 'Corporate (Orçamento)',
+        objetivo: 'Cotação de serviço padrão / Consultoria',
+        placeholder: 'Descreva brevemente o tamanho da sua operação (ex: nº de colaboradores)...'
+    },
+	'roi': {
+        title: 'Proposta <span class="text-cyan-400">ROI & Performance</span>',
+        subtitle: 'Implementação de 3 meses com dashboards de monitorização em tempo real.',
+        tipo: 'Corporate (ROI & Performance)',
+        objetivo: 'Venda de implementação completa (3 meses)',
+        placeholder: 'Quais os principais KPIs ou processos que deseja otimizar com IA?'
+    },
+	'sprint': {
+        title: 'Sprint <span class="text-cyan-400">Diagnóstico</span>',
+        subtitle: 'Mapeamento intensivo de 4 semanas.',
+        tipo: 'Corporate (Sprint)',
+        objetivo: 'Venda de consultoria curta',
+        placeholder: 'Conte-nos brevemente sobre a dimensão da sua equipa...'
+    },
+    'certif': {
+        title: 'Certificação <span class="text-purple-400">DBAR</span>',
+        subtitle: 'Parcerias B2B e Licenciamento Metodológico.',
+        tipo: 'Corporate (Certificação)',
+        objetivo: 'Parcerias B2B / Licenciamento',
+        placeholder: 'Qual o perfil da sua consultoria/empresa?'
+    },
+    'agendamento': {
+        title: 'Agendamento <span class="text-cyan-400">Imediato</span>',
+        subtitle: 'Sessão estratégica de 30 minutos para mapear o seu cenário de IA.',
+        tipo: 'Corporate (Agendamento)',
+        objetivo: 'Diagnóstico estratégico / Reunião comercial',
+        placeholder: 'Sugira dois horários de preferência ou descreva a sua maior urgência...'
+    },
+};
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.getElementById('modal-corporate').classList.contains('active')) toggleModal();
-        })
+function openModal(contextKey) {
+    const ctx = modalContexts[contextKey] || modalContexts['agendamento'];
+    
+    // Atualiza a Interface Visual
+    document.getElementById('modal-header-title').innerHTML = ctx.title;
+    document.getElementById('modal-header-subtitle').innerText = ctx.subtitle;
+    document.getElementById('modal-textarea').placeholder = ctx.placeholder;
+
+    // Atualiza os campos ocultos para o Netlify
+    document.getElementById('input-tipo-solicitacao').value = ctx.tipo;
+    document.getElementById('input-objetivo-lead').value = ctx.objetivo;
+
+    // Abre o Modal
+    const modal = document.getElementById('modal-global');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    const modal = document.getElementById('modal-global');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         }
         lucide.createIcons();
     </script>
-<div id="modal-corporate" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div onclick="toggleModal()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md"></div>
-        <div class="modal-content relative w-full max-w-xl glass-panel p-8 md:p-10 rounded-3xl border border-white/10 shadow-2xl bg-slate-900/90">
-            <button onclick="toggleModal()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-            <div class="mb-8">
-                <h3 class="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Alinhamento <span class="text-cyan-400">Estratégico</span></h3>
-                <p class="text-slate-400 text-xs">Preencha os dados abaixo para iniciar o processo.</p>
-            </div>
-            <form name="corporate-quote" method="POST" data-netlify="true" action="/success" class="space-y-5">
-                <input type="hidden" name="form-name" value="corporate-quote" />
-                <p class="hidden"><label><input name="bot-field" /></label></p>
-                <div class="grid grid-cols-1 gap-4">
-                    <input type="text" name="name" required placeholder="Nome Completo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 transition-all">
-                    <input type="email" name="email" required placeholder="E-mail Corporativo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 transition-all">
-                    <select name="challenge" class="w-full bg-slate-800 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-cyan-500 transition-all">
-                        <option value="governanca">Governança de IA</option>
-                        <option value="roi">Medição de ROI</option>
-                        <option value="shadow">Shadow IA / Segurança</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full bg-cyan-500 text-slate-950 font-bold py-4 rounded-xl hover:bg-cyan-400 transition-all uppercase text-[10px] tracking-widest mt-4">
-                    Enviar Solicitação
-                </button>
-            </form>
-        </div>
-    </div>
 </body>
 </html>
