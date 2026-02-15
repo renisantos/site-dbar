@@ -75,119 +75,59 @@
     </style>
 </head>
 <body class="antialiased">
-
     <nav class="fixed w-full z-50 glass-purple border-b border-violet-500/20">
-
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
-
             <div class="flex justify-between items-center h-20">
-
-                
-
                 <div class="flex items-center gap-3 shrink-0">
-
                     <div class="bg-violet-500/20 p-2 rounded-lg border border-violet-500/30">
-
                         <i data-lucide="triangle" class="w-6 h-6 text-violet-400 fill-violet-400/20 transform rotate-180"></i>
-
                     </div>
-
                     <span class="text-xl font-display font-bold text-white tracking-tight">
-
                         DBAR <span class="text-violet-400">Methodology</span>
-
                     </span>
-
                 </div>
-
-
 
                 <div class="flex items-center gap-4">
-
                     <div class="hidden lg:flex items-center gap-8 border-r border-white/10 pr-8">
-
                         <a href="#inicio" class="text-[10px] font-bold uppercase tracking-widest text-violet-200/60 hover:text-white transition-colors">Início</a>
-
                         <a href="#aplicacoes" class="text-[10px] font-bold uppercase tracking-widest text-violet-200/60 hover:text-white transition-colors">Aplicações</a>
-
                         <a href="#evolucao" class="text-[10px] font-bold uppercase tracking-widest text-violet-200/60 hover:text-white transition-colors">Evolução</a>
-
-                        
-
-                        <a href="#contato" class="bg-white text-black px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-all shadow-lg shadow-white/5">
-
+                        <button onclick="openModal('tecnico')" class="bg-white text-black px-5 py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-400 transition-all shadow-lg shadow-white/5">
                             Falar com Especialista
-
-                        </a>
-
+                        </button>
                     </div>
 
-
-
                     <a href="index.html" class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-all group shrink-0">
-
                         <div class="flex items-center gap-2 bg-slate-800/40 p-2 rounded-lg border border-white/5 group-hover:border-cyan-500/30 group-hover:bg-cyan-500/10 transition-all">
-
                             <i data-lucide="arrow-left" class="w-4 h-4"></i>
-
                             <i data-lucide="layout-grid" class="w-4 h-4"></i>
-
                         </div>
-
                         <span class="text-xs font-bold uppercase tracking-[0.1em] font-display hidden sm:block">Voltar ao Hub</span>
-
                     </a>
-
-
-
                     <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-violet-300">
-
                         <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
-
                     </button>
-
                 </div>
-
             </div>
 
         </div>
-
-
-
         <div id="mobile-menu" class="hidden lg:hidden bg-[#0f0518]/95 backdrop-blur-2xl border-b border-violet-500/20">
-
             <div class="px-8 py-10 space-y-8">
-
                 <a href="#inicio" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-violet-200">
-
                     <i data-lucide="activity" class="w-5 h-5 text-violet-400"></i> Início
-
                 </a>
-
                 <a href="#aplicacoes" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-violet-200">
-
                     <i data-lucide="layers" class="w-5 h-5 text-violet-400"></i> Aplicações
-
                 </a>
-
                 <a href="#evolucao" onclick="toggleMobileMenu()" class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-violet-200">
-
                     <i data-lucide="trending-up" class="w-5 h-5 text-violet-400"></i> Evolução
-
                 </a>
-
                 <div class="h-px bg-white/5 w-full"></div>
-
-                <a href="#contato" onclick="toggleMobileMenu()" class="bg-cyan-500 text-slate-900 w-full py-4 rounded-xl font-bold uppercase tracking-widest flex items-center justify-center gap-3">
-
+                <button onclick="openModal('tecnico'); toggleMobileMenu();" class="bg-cyan-500 text-slate-900 w-full py-4 rounded-xl font-bold uppercase tracking-widest flex items-center justify-center gap-3">
                     <i data-lucide="message-circle" class="w-5 h-5"></i> Falar com Especialista
-
                 </a>
-
             </div>
-
         </div>
-
     </nav>
 
     <section class="relative pt-32 pb-16 overflow-hidden">
