@@ -65,14 +65,15 @@
         .triangle-glow { filter: drop-shadow(0 0 30px rgba(14, 165, 233, 0.3)); }
         
         /* CARDS COM EFEITO DE AUMENTO REALÇADO */
-        .portal-card {
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Curva de "pop" */
-            position: relative;
-            z-index: 10;
-        }
+     .portal-card {
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    z-index: 10;
+    width: 100%; /* Garante que nunca ultrapassa o ecrã */
+}
        /* Substitua o hover antigo por este */
       @media (min-width: 1024px) {
         .portal-card:hover {
@@ -108,6 +109,8 @@ body {
             .portal-edu:hover { background: #fff; }
         }
         .social-link { @apply text-slate-500 transition-all duration-300 hover:scale-125 hover:text-cyan-400; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center relative grid-bg overflow-y-auto py-12">
@@ -143,34 +146,37 @@ body {
        <div class="mt-6 px-4 md:px-8 py-6 portal-card rounded-2xl inline-block shadow-2xl w-full max-w-2xl overflow-hidden">
     <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.3em] mb-4 opacity-70">Validation Architecture</p>
     
-    <div class="overflow-x-auto pb-2 scrollbar-hide">
-        <div class="text-sm md:text-base font-mono text-slate-100 whitespace-nowrap">
+    <div class="mt-8 p-6 portal-card rounded-2xl inline-block shadow-2xl w-full max-w-full md:max-w-2xl overflow-hidden">
+    <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-[0.3em] mb-6 opacity-70">Validation Architecture</p>
+    
+    <div class="overflow-x-auto pb-4 scrollbar-hide">
+        <div class="text-base md:text-lg font-mono text-slate-100 whitespace-nowrap px-2">
             $$Score_{DBAR} = \frac{(HardData \times ROI) + (SoftData \times Confiança)}{Risco_{ShadowAI}}$$
         </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 border-t border-white/5 pt-4 text-left">
-            <div>
-                <p class="text-[8px] md:text-[9px] font-bold text-cyan-500 uppercase">HardData</p>
-                <p class="text-[10px] text-slate-400 leading-tight">Métricas Quantitativas</p>
-            </div>
-            <div>
-                <p class="text-[8px] md:text-[9px] font-bold text-cyan-500 uppercase">ROI</p>
-                <p class="text-[10px] text-slate-400 leading-tight">Retorno sobre Investimento</p>
-            </div>
-            <div>
-                <p class="text-[8px] md:text-[9px] font-bold text-violet-400 uppercase">SoftData</p>
-                <p class="text-[10px] text-slate-400 leading-tight">Perceção e Comportamento</p>
-            </div>
-            <div>
-                <p class="text-[8px] md:text-[9px] font-bold text-violet-400 uppercase">Confiança</p>
-                <p class="text-[10px] text-slate-400 leading-tight">Literacia e Ética Digital</p>
-            </div>
-                <div class="col-span-2 md:col-span-1">
-                <p class="text-[8px] md:text-[9px] font-bold text-rose-500 uppercase">Risco Shadow IA</p>
-                <p class="text-[10px] text-slate-400 leading-tight">Uso não supervisionado</p>
-            </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 border-t border-white/10 pt-6 text-left">
+        <div>
+            <p class="text-[0.5rem] md:text-[0.6875rem] font-bold text-cyan-500 uppercase">HardData</p>
+            <p class="text-[0.6875rem] md:text-sm text-slate-400">Métricas Quantitativas</p>
         </div>
+        <div>
+            <p class="text-[0.5rem] md:text-[0.6875rem] font-bold text-cyan-500 uppercase">ROI</p>
+            <p class="text-[0.6875rem] md:text-sm text-slate-400">Retorno de Investimento</p>
+        </div>
+        <div>
+            <p class="text-[0.5rem] md:text-[0.6875rem] font-bold text-violet-400 uppercase">SoftData</p>
+            <p class="text-[0.6875rem] md:text-sm text-slate-400">Comportamento</p>
+        </div>
+        <div>
+            <p class="text-[0.5rem] md:text-[0.6875rem] font-bold text-violet-400 uppercase">Confiança</p>
+            <p class="text-[0.6875rem] md:text-sm text-slate-400">Literacia Digital</p>
+        </div>
+        <div class="col-span-2 md:col-span-1">
+            <p class="text-[0.5rem] md:text-[0.6875rem] font-bold text-rose-500 uppercase">Risco Shadow IA</p>
+            <p class="text-[0.6875rem] md:text-sm text-slate-400">Uso não supervisionado</p>
+        </div>
+    </div>
 </div>
     </header>
 
