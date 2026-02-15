@@ -62,6 +62,17 @@
         #modal-edu.active .modal-content-edu {
             transform: scale(1) translateY(0);
         }
+    .prose p { 
+    margin-bottom: 1.5rem; 
+    line-height: 1.8; 
+    color: #cbd5e1; /* Cor um pouco mais clara para facilitar leitura */
+    font-size: 0.875rem; /* Aumentado para 14px */
+}
+	/* Ajuste das legendas pequenas */
+.prose .text-xs {
+    font-size: 0.6875rem; /* Aumentado para 11px */
+}
+        .prose h2 { font-family: 'Space Grotesk', sans-serif; color: white; font-size: 1.25rem; margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; border-left: 3px solid #06b6d4; padding-left: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
     </style>
 </head>
 <body class="antialiased selection:bg-orange-100 selection:text-orange-600">
@@ -80,10 +91,10 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="hidden lg:flex items-center gap-6 border-r border-slate-200 pr-6">
-                        <a href="#inicio" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Início</a>
-                        <a href="#metodologia" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Metodologia</a>
-                        <a href="#programas" class="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Soluções</a>
-                        <button onclick="openModalEdu('agendamento')" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-[9px] font-bold uppercase tracking-widest transition-all">
+                        <a href="#inicio" class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Início</a>
+                        <a href="#metodologia" class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Metodologia</a>
+                        <a href="#programas" class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 hover:text-teal-600 transition-colors">Soluções</a>
+                        <button onclick="openModalEdu('agendamento')" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">
                             Agendar Diagnóstico
                         </button>
                     </div>
@@ -160,37 +171,37 @@
 <section id="metodologia" class="py-24 bg-slate-50 border-y border-slate-100">
         <div class="max-w-7xl mx-auto px-6 text-center">
             <h2 class="text-2xl font-display font-bold text-slate-900 mb-4 tracking-tight uppercase">Metodologia - Triangulação em Instituições de Ensino</h2>
-            <p class="text-slate-500 text-sm mb-16 max-w-xl mx-auto leading-relaxed">Cruzamos evidências técnicas com processos de reflexão humana para validar a aprendizagem real.</p>
+            <p class="text-slate-500 text-[13px] mb-16 max-w-xl mx-auto leading-relaxed">Cruzamos evidências técnicas com processos de reflexão humana para validar a aprendizagem real.</p>
             
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="glass-panel p-8 rounded-3xl step-card text-left bg-white border border-slate-200 shadow-sm">
-                    <div class="text-[10px] font-bold text-teal-600 mb-6 opacity-60 uppercase tracking-[0.2em]">Passo 01</div>
+                    <div class="text-[12px] font-bold text-teal-600 mb-6 opacity-60 uppercase tracking-[0.2em]">Passo 01</div>
                     <div class="bg-teal-50 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-teal-100">
                         <i data-lucide="microscope" class="w-6 h-6 text-teal-600"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-3">Evidência Técnica</h3>
-                    <p class="text-slate-500 text-xs leading-relaxed">Análise de telemetria, prompts e padrões de interação para entender o comportamento criativo dos alunos com a IA.</p>
+                    <p class="text-slate-500 text-base leading-relaxed">Análise de telemetria, prompts e padrões de interação para entender o comportamento criativo dos alunos com a IA.</p>
                 </div>
 
                 <div class="glass-panel p-8 rounded-3xl step-card text-left border-orange-200 bg-orange-50/20 shadow-sm relative overflow-hidden">
                     <div class="absolute top-0 right-0 p-4 opacity-10">
                         <i data-lucide="brain" class="w-16 h-16 text-orange-600"></i>
                     </div>
-                    <div class="text-[10px] font-bold text-orange-600 mb-6 uppercase tracking-[0.2em]">Passo 02</div>
+                    <div class="text-[12px] font-bold text-orange-600 mb-6 uppercase tracking-[0.2em]">Passo 02</div>
                     <div class="bg-orange-100 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-orange-200">
                         <i data-lucide="message-square-quote" class="w-6 h-6 text-orange-600"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-3">Reflexão Humana</h3>
-                    <p class="text-slate-500 text-xs leading-relaxed">Validação da "Confiança Digital" através de diários de bordo e exercícios de metacognição assistida.</p>
+                    <p class="text-slate-500 text-base leading-relaxed">Validação da "Confiança Digital" através de diários de bordo e exercícios de metacognição assistida.</p>
                 </div>
 
                 <div class="glass-panel p-8 rounded-3xl step-card text-left bg-white border border-slate-200 shadow-sm">
-                    <div class="text-[10px] font-bold text-slate-400 mb-6 uppercase tracking-[0.2em]">Passo 03</div>
+                    <div class="text-[12px] font-bold text-slate-400 mb-6 uppercase tracking-[0.2em]">Passo 03</div>
                     <div class="bg-slate-100 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-slate-200">
                         <i data-lucide="layout-dashboard" class="w-6 h-6 text-slate-600"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-3">Intervenção</h3>
-                    <p class="text-slate-500 text-xs leading-relaxed">Geração de dashboards analíticos que permitem ao professor agir em tempo real sobre vulnerabilidades cognitivas.</p>
+                    <p class="text-slate-500 text-base leading-relaxed">Geração de dashboards analíticos que permitem ao professor agir em tempo real sobre vulnerabilidades cognitivas.</p>
                 </div>
             </div>
         </div>
@@ -206,9 +217,9 @@
                     <div>
                         <div class="mb-4 text-teal-600 bg-teal-50 w-12 h-12 rounded-xl flex items-center justify-center border border-teal-100"><i data-lucide="users" class="w-6 h-6"></i></div>
                         <h3 class="text-lg font-bold text-slate-800 mb-2">Formação Docente</h3>
-                        <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Workshops imersivos para capacitar professores no uso ético de IA.</p>
+                        <p class="text-slate-400 text-base leading-relaxed">Workshops imersivos para capacitar professores no uso ético de IA.</p>
                     </div>
-                    <button onclick="openModalEdu('docente')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                    <button onclick="openModalEdu('docente')" class="mt-8 block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[11px] uppercase tracking-widest">
                         Solicitar Ementa
                     </button>
                 </div>
@@ -218,9 +229,9 @@
                     <div>
                         <div class="mb-4 text-white bg-teal-600 w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-teal-600/20"><i data-lucide="school" class="w-6 h-6"></i></div>
                         <h3 class="text-lg font-bold text-slate-800 mb-2">Escola Digital</h3>
-                        <p class="text-slate-500 text-[11px] mb-6 leading-relaxed">Implementação do DBAR Analytics no currículo e suporte pedagógico.</p>
+                        <p class="text-slate-400 text-base leading-relaxed">Implementação do DBAR Analytics no currículo e suporte pedagógico.</p>
                     </div>
-                    <button onclick="openModalEdu('demo')" class="w-full bg-teal-500 text-white font-bold py-3 rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/20 uppercase text-[10px] tracking-widest">
+                    <button onclick="openModalEdu('demo')" class="mt-8 w-full bg-teal-500 text-white font-bold py-3 rounded-xl hover:bg-teal-600 transition-all shadow-lg shadow-teal-500/20 uppercase text-[11px] tracking-widest">
                         Solicitar Demonstração
                     </button>
                 </div>
@@ -229,9 +240,9 @@
                     <div>
                         <div class="mb-4 text-orange-500 bg-orange-50 w-12 h-12 rounded-xl flex items-center justify-center border border-orange-100"><i data-lucide="layout" class="w-6 h-6"></i></div>
                         <h3 class="text-lg font-bold text-slate-800 mb-2">Plataforma SaaS</h3>
-                        <p class="text-slate-500 text-[11px] mb-8 leading-relaxed">Acesso puro à tecnologia para escolas com metodologia própria.</p>
+                        <p class="text-slate-400 text-base leading-relaxed">Acesso puro à tecnologia para escolas com metodologia própria.</p>
                     </div>
-                    <button onclick="openModalEdu('saas')" class="block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[10px] uppercase tracking-widest">
+                    <button onclick="openModalEdu('saas')" class="mt-8 block w-full py-2.5 text-center border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold text-[11px] uppercase tracking-widest">
                         Ver Planos
                     </button>
                 </div>
@@ -246,7 +257,7 @@
                 <button onclick="openModalEdu('agendamento')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-teal-100 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group w-full">
                     <div class="bg-teal-500 p-3 rounded-full text-white shadow-md group-hover:scale-110 transition-transform"><i data-lucide="calendar-check" class="w-6 h-6"></i></div>
                     <div>
-                        <p class="text-[9px] font-bold text-teal-600 uppercase tracking-widest mb-0.5">Ação Pedagógica</p>
+                        <p class="text-[11px] font-bold text-teal-600 uppercase tracking-widest mb-0.5">Ação Pedagógica</p>
                         <p class="text-slate-800 font-bold text-base leading-tight">Agendar Diagnóstico</p>
                     </div>
                 </button>
@@ -254,7 +265,7 @@
                 <button onclick="openModalEdu('oficial')" class="bg-white p-6 rounded-2xl flex items-center gap-5 border border-slate-200 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group w-full text-left">
                     <div class="bg-teal-50 p-3 rounded-full text-teal-600 group-hover:bg-teal-500 group-hover:text-white transition-all"><i data-lucide="mail" class="w-6 h-6"></i></div>
                     <div>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
+                        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Via Oficial</p>
                         <p class="text-slate-800 font-bold text-base leading-tight">Enviar Pedido Formal</p>
                     </div>
                 </button>
