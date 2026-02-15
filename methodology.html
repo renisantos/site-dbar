@@ -54,7 +54,24 @@
             background-size: 40px 40px;
             mask-image: radial-gradient(circle at center, black, transparent 85%);
         }
-        .nav-link { @apply text-[9px] font-bold uppercase tracking-[0.2em] text-violet-200/60 hover:text-white transition-colors; }
+        /* ESTILOS DO MODAL */
+        #modal-method {
+            transition: all 0.3s ease-in-out;
+            visibility: hidden;
+            opacity: 0;
+            z-index: 100;
+        }
+        #modal-method.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #modal-method.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -297,7 +314,7 @@
             <p class="text-slate-500 mb-10 text-xs">Suporte técnico especializado para implementações científicas.</p>
 
             <div class="grid sm:grid-cols-2 gap-4 text-left">
-                <a href="https://wa.me/351935890108?text=Olá!%20Venho%20da%20Metodologia%20e%20quero%20um%20Diagnóstico." target="_blank" class="glass-purple p-6 rounded-2xl flex items-center gap-5 border-violet-500/30 hover:border-violet-500/60 transition-all group">
+                <button onclick="openModal('diagnostico')" class="glass-purple p-6 rounded-2xl flex items-center gap-5 border-violet-500/30 hover:border-violet-500/60 transition-all group">
                     <div class="bg-violet-600 p-3 rounded-full text-white shadow-lg group-hover:scale-110 transition-transform">
                         <i data-lucide="calendar-check" class="w-6 h-6"></i>
                     </div>
@@ -305,21 +322,43 @@
                         <p class="text-[9px] font-bold text-violet-400 uppercase tracking-widest mb-0.5">Diagnóstico</p>
                         <p class="text-white font-bold text-base">Agendar Sessão</p>
                     </div>
-                </a>
+                </button>
 
-                <a href="https://wa.me/351935890108?text=Tenho%20dúvidas%20técnicas%20sobre%20o%20DBAR." target="_blank" class="glass-purple p-6 rounded-2xl flex items-center gap-5 border-white/5 hover:border-violet-500/30 transition-all group">
+                <button onclick="openModal('tecnico')" class="glass-purple p-6 rounded-2xl flex items-center gap-5 border-white/5 hover:border-violet-500/30 transition-all group">
                     <div class="bg-slate-800 p-3 rounded-full text-slate-300 group-hover:scale-110 transition-transform">
                         <i data-lucide="messages-square" class="w-6 h-6"></i>
                     </div>
                     <div>
                         <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-0.5">Técnico</p>
                         <p class="text-white font-bold text-base">Falar com Especialista</p>
-                    </div>
+                    </button>
                 </a>
             </div>
         </div>
     </section>
+<div id="modal-method" class="fixed inset-0 flex items-center justify-center p-4">
+        <div onclick="closeModal()" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md"></div>
+        <div class="modal-content relative w-full max-w-xl glass-purple p-8 md:p-10 rounded-3xl shadow-2xl bg-slate-900/95 border border-violet-500/20">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+            
+            <div class="mb-8 text-left">
+                <h3 id="modal-title" class="text-2xl font-display font-bold text-white mb-2 uppercase tracking-tight">Solicitar <span class="text-violet-400">Validação</span></h3>
+                <p id="modal-subtitle" class="text-slate-400 text-xs italic">A estabelecer conexão técnica com a central...</p>
+            </div>
 
+            <form name="leads-methodology" method="POST" data-netlify="true" action="/success" class="space-y-4">
+                <input type="hidden" name="form-name" value="leads-methodology" />
+                <input type="hidden" name="tipo_solicitacao" id="input-tipo" value="" />
+                
+                <div class="grid grid-cols-1 gap-4 text-left">
+                    <input type="text" name="name" required placeholder="Nome / Cargo" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-violet-500 outline-none transition-all">
+                    <input type="email" name="email" required placeholder="E-mail Corporativo ou Institucional" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-violet-500 outline-none transition-all">
+                    <textarea name="message" id="modal-textarea" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:border-violet-500 outline-none transition-all resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-violet-600 text-white font-bold py-4 rounded-xl hover:bg-violet-500 transition-all uppercase text-[10px] tracking-widest mt-4 shadow-lg shadow-violet-600/20">Confirmar Pedido Técnico</button>
+            </form>
+        </div>
+    </div>
     <footer class="py-10 text-center border-t border-white/5 opacity-40">
         <div class="flex items-center justify-center gap-3 mb-3">
             <img src="logo_dbar.png" alt="DBAR" class="h-5 w-auto grayscale">
@@ -333,7 +372,25 @@
     </a>
 
     <script>
-        lucide.createIcons();
+        const methodContexts = {
+            'diagnostico': { title: 'Agendar <span class="text-violet-400">Diagnóstico</span>', subtitle: 'Sessão técnica para validação metodológica.', tipo: 'Methodology (Diagnóstico)', placeholder: 'Descreva o cenário atual da sua organização...' },
+            'tecnico': { title: 'Suporte <span class="text-cyan-400">Especializado</span>', subtitle: 'Esclareça dúvidas sobre a Triangulação Dinâmica.', tipo: 'Methodology (Técnico)', placeholder: 'Qual a sua dúvida técnica sobre a nossa medição?' }
+        };
+
+        function openModal(key) {
+            const ctx = methodContexts[key];
+            document.getElementById('modal-title').innerHTML = ctx.title;
+            document.getElementById('modal-subtitle').innerText = ctx.subtitle;
+            document.getElementById('modal-textarea').placeholder = ctx.placeholder;
+            document.getElementById('input-tipo').value = ctx.tipo;
+            document.getElementById('modal-method').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-method').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
@@ -381,6 +438,8 @@
             lucide.createIcons();
         }
         switchSector('corp');
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        lucide.createIcons();
     </script>
 </body>
 </html>
