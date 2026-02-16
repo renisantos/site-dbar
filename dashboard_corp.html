@@ -1,286 +1,1921 @@
 <!DOCTYPE html>
 <html lang="pt-PT">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DBAR Analytics | Corporate Console v2.1</title>
+    <title>DBAR - Sistema Integrado (Admin Final V10)</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
-        body { background-color: #020617; color: #fff; font-family: 'Inter', sans-serif; }
-        .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-sidebar { background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px); border-right: 1px solid rgba(255, 255, 255, 0.05); }
-        .grid-bg { background-image: radial-gradient(rgba(6, 182, 212, 0.05) 1px, transparent 1px); background-size: 30px 30px; }
-        .bar-anim { animation: growUp 1s ease-out forwards; transform-origin: bottom; transform: scaleY(0); }
-        @keyframes growUp { to { transform: scaleY(1); } }
-        /* Animação suave na troca de abas */
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Layout Fixes */
+        #app-layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* UI Components */
+        .card {
+            @apply bg-white p-6 rounded-xl border border-slate-200 shadow-sm transition-all;
+        }
+
+        .btn-primary {
+            @apply bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition flex items-center gap-2 cursor-pointer;
+        }
+
+        .btn-secondary {
+            @apply bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-50 transition flex items-center gap-2 cursor-pointer;
+        }
+
+        .input-clean {
+            /* Updated to match requested Glassmorphism style, but adapting to light theme visibility if needed, or forcing dark for modals */
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            /* Dark theme assumption for modal */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: white;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-clean:focus {
+            border-color: #22d3ee;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* Ensure options are legible */
+        option {
+            background-color: #0F172A;
+            color: white;
+        }
+
+        /* Glassmorphism Refinado for Modal */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .label {
+            @apply block text-xs font-bold text-slate-500 uppercase mb-1 tracking-wide;
+        }
+
+        /* Navigation */
+        .nav-item {
+            @apply flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors cursor-pointer text-sm font-medium;
+        }
+
+        .nav-item.active {
+            @apply bg-teal-900/50 text-teal-400 border border-teal-800/50;
+        }
+
+        /* Themes */
+        .theme-admin .sidebar {
+            @apply bg-slate-900 border-slate-800;
+        }
+
+        .theme-formador .sidebar {
+            @apply bg-teal-900 border-teal-800;
+        }
+
+        .theme-formador .nav-item.active {
+            @apply bg-teal-800 text-white border-teal-700;
+        }
+
+        .theme-gestor .sidebar {
+            @apply bg-indigo-900 border-indigo-800;
+        }
+
+        .theme-gestor .nav-item.active {
+            @apply bg-indigo-800 text-white border-indigo-700;
+        }
+
+        .theme-aluno .sidebar {
+            @apply bg-orange-900 border-orange-800;
+        }
+
+        .theme-aluno .nav-item.active {
+            @apply bg-orange-800 text-white border-orange-700;
+        }
+
+        /* Panels Logic */
+        .hidden-panel {
+            display: none !important;
+            opacity: 0;
+            pointer-events: none;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .visible-panel {
+            display: block !important;
+            opacity: 1;
+            height: auto;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .v3-panel {
+            display: none;
+        }
+
+        .v3-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tables & Chips */
+        .dbar-table th,
+        .v3-table th {
+            @apply bg-slate-50 px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200;
+        }
+
+        .dbar-table td,
+        .v3-table td {
+            @apply px-4 py-3 text-sm text-slate-700 border-b border-slate-100;
+        }
+
+        .dbar-table tr:hover,
+        .v3-table tr:hover {
+            @apply bg-slate-50 cursor-pointer;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 2px 4px 0 0;
+            border-radius: 999px;
+            font-size: 11px;
+            background: #f1f3f5;
+            font-weight: 600;
+        }
+
+        .editable-cell {
+            cursor: pointer;
+            border-bottom: 1px dashed #cbd5e1;
+            transition: background 0.2s;
+        }
+
+        .editable-cell:hover {
+            background-color: #f0fdfa;
+            border-color: #0d9488;
+        }
+
+        /* --- MODAL (CONFIGURAÇÃO BLINDADA) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(15, 23, 42, 0.75);
+            /* Fundo escuro */
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.hidden {
+            display: none !important;
+        }
+
+        /* CORREÇÃO: Forçar fundo branco e garantir opacidade */
+        .modal-content {
+            background-color: #ffffff !important;
+            border-radius: 1rem;
+            /* rounded-2xl */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            /* shadow-2xl */
+            width: 100%;
+            max-width: 550px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalZoom 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .modal-header {
+            @apply px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10;
+        }
+
+        .modal-body {
+            @apply px-8 py-6 space-y-5 overflow-y-auto bg-white flex-1;
+        }
+
+        /* CORREÇÃO CRÍTICA: Garante que os botões (Cancelar/Salvar) fiquem lado a lado à direita */
+        .modal-footer {
+            @apply px-8 py-5 bg-slate-50 border-t border-slate-100 flex justify-end gap-3 sticky bottom-0 z-10;
+        }
+
+        @keyframes modalPop {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 99px;
+            background-color: #1e293b;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translate(-50%, -10px);
+        }
+
+        /* Tabela */
+        .dbar-table th {
+            @apply bg-slate-50 px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200;
+        }
+
+        .dbar-table td {
+            @apply px-4 py-3 text-sm text-slate-700 border-b border-slate-100;
+        }
+
+        .dbar-table tr:hover {
+            @apply bg-slate-50 cursor-pointer;
+        }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden grid-bg">
 
-    <aside class="w-20 lg:w-64 flex-shrink-0 glass-sidebar flex flex-col justify-between z-50">
+<body class="theme-admin" id="app-body">
+
+    <div id="loader" class="loader-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+    <div id="toast-notification" class="toast">Ação realizada com sucesso!</div>
+
+    <div id="generic-modal" class="modal-overlay hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-95"
+            id="modal-content">
+            <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center"
+                id="modal-header">
+                <div>
+                    <h3 class="font-bold text-slate-900 text-xl tracking-tight" id="modal-title">Título</h3>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1" id="modal-subtitle">
+                        CONTEXTO</p>
+                </div>
+                <button onclick="closeModal()"
+                    class="text-slate-400 hover:text-red-500 transition cursor-pointer p-1 rounded-full hover:bg-slate-100"><i
+                        data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()"
+                    class="text-slate-500 hover:text-slate-800 font-bold text-sm px-4 py-2 rounded-lg transition">Cancelar</button>
+                <button onclick="saveAndClose()"
+                    class="bg-slate-900 hover:bg-black text-white font-bold text-sm px-6 py-2 rounded-lg shadow-md transition transform active:scale-95 flex items-center gap-2"
+                    id="modal-save-btn">
+                    Salvar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-layout">
+
+        <!-- Barra de Simulação -->
+        <div id="simulation-bar"
+            class="hidden h-14 w-full bg-slate-800 text-white flex items-center justify-between px-6 shadow-xl z-50 absolute top-0 left-0 border-b border-white/10">
+            <div class="flex items-center gap-4">
+                <div class="bg-white/10 p-2 rounded-full"><i data-lucide="eye" class="w-4 h-4"></i></div>
+                <div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-white/60">Modo de Visualização</p>
+                    <p class="text-sm font-bold text-white leading-none" id="sim-role-name">--</p>
+                </div>
+                <div class="h-6 w-[1px] bg-white/10 mx-2"></div>
+                <div class="text-sm text-slate-300 flex items-center gap-2">
+                    <i data-lucide="folder" class="w-4 h-4 text-teal-400"></i> <span id="sim-context-name"
+                        class="font-medium">--</span>
+                </div>
+            </div>
+            <button onclick="exitSimulation()"
+                class="bg-white text-slate-900 hover:bg-slate-100 px-5 py-1.5 rounded-full text-xs font-bold shadow transition flex items-center gap-2 cursor-pointer">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Voltar ao Admin
+            </button>
+        </div>
+
+        <!-- Sidebar -->
+        <aside
+            class="w-72 bg-slate-900 text-white flex flex-col border-r border-white/5 z-40 transition-colors duration-500 sidebar"
+            id="main-sidebar">
+            <div class="p-8 pb-6 flex items-center gap-3 pt-10" id="sidebar-header">
+                <div class="bg-teal-600 p-2.5 rounded-xl shadow-lg shadow-teal-500/20"><i data-lucide="command"
+                        class="w-5 h-5 text-white"></i></div>
+                <div>
+                    <span class="font-black text-xl tracking-tight block">DBAR<span
+                            class="text-teal-500 font-light opacity-80">.io</span></span>
+                </div>
+            </div>
+            <nav class="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar" id="dynamic-nav"></nav>
+            <div class="p-6 mt-auto border-t border-white/5">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=0f766e&color=fff"
+                        class="w-10 h-10 rounded-full border-2 border-white/10" id="user-avatar">
+                    <div class="overflow-hidden">
+                        <p class="text-sm font-bold text-white truncate" id="user-name">Renielton S.</p>
+                        <p class="text-[10px] text-white/50 uppercase tracking-widest font-bold" id="user-role-label">
+                            Super Admin</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden bg-slate-50 relative" id="app-main-content">
+            <header
+                class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shadow-sm z-20 shrink-0 mt-0 transition-all pt-0"
+                id="main-header">
+                <h1 class="text-xl font-bold text-slate-800" id="page-title">Dashboard Geral</h1>
+
+                <div class="flex gap-3 items-center">
+
+                    <div id="admin-actions" class="flex gap-2">
+                    </div>
+
+                    <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-lg border border-slate-200">
+                        <span class="text-[10px] uppercase font-bold text-slate-500 px-2">Ver como:</span>
+                        <select id="role-simulator" onchange="enterSimulation(this.value)"
+                            class="bg-white text-xs font-bold border-none rounded py-1 px-2 focus:ring-0 cursor-pointer">
+                            <option value="admin">Administrador</option>
+                            <option value="formador">Formador</option>
+                            <option value="gestor">Gestor</option>
+                            <option value="aluno">Aluno</option>
+                        </select>
+                    </div>
+
+                    <button
+                        class="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-xs font-bold hover:bg-slate-50 transition flex items-center gap-2">
+                        <i data-lucide="bell" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-10" id="content-area">
+
+                <!-- === 1. VISÃO ADMIN (FINAL CORRIGIDA) === -->
+                <div id="view-admin" class="visible-panel space-y-8">
+
+                    <!-- KPIs: Formações, Alunos, Dados, Licenças, Consultorias, Valor -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <div class="card p-4 border-l-4 border-teal-500">
+                            <p class="label">Formações Ativas</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <p class="text-3xl font-black text-slate-800">12</p>
+                                <div class="p-1.5 bg-teal-50 rounded text-teal-600"><i data-lucide="zap"
+                                        class="w-4 h-4"></i></div>
+                            </div>
+                        </div>
+                        <div class="card p-4 border-l-4 border-blue-500">
+                            <p class="label">Total Alunos</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <p class="text-3xl font-black text-slate-800">1,240</p>
+                                <div class="p-1.5 bg-blue-50 rounded text-blue-600"><i data-lucide="users"
+                                        class="w-4 h-4"></i></div>
+                            </div>
+                        </div>
+                        <div class="card p-4 border-l-4 border-purple-500">
+                            <p class="label">Dados Recolhidos</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <p class="text-3xl font-black text-slate-800">85%</p>
+                                <div class="p-1.5 bg-purple-50 rounded text-purple-600"><i data-lucide="database"
+                                        class="w-4 h-4"></i></div>
+                            </div>
+                        </div>
+                        <div class="card p-4 border-l-4 border-amber-500">
+                            <p class="label">Licenças SAAS</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <p class="text-3xl font-black text-slate-800">8</p>
+                                <div class="p-1.5 bg-amber-50 rounded text-amber-600"><i data-lucide="briefcase"
+                                        class="w-4 h-4"></i></div>
+                            </div>
+                        </div>
+                        <div class="card p-4 border-l-4 border-indigo-500">
+                            <p class="label">Consultorias</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <p class="text-3xl font-black text-slate-800">4</p>
+                                <div class="p-1.5 bg-indigo-50 rounded text-indigo-600"><i data-lucide="lightbulb"
+                                        class="w-4 h-4"></i></div>
+                            </div>
+                        </div>
+                        <div class="card p-4 border-l-4 border-emerald-500">
+                            <p class="label">Valor Devido</p>
+                            <div class="flex justify-between items-end mt-2">
+                                <p class="text-3xl font-black text-emerald-700">€ 45k</p>
+                                <div class="p-1.5 bg-emerald-50 rounded text-emerald-600"><i data-lucide="trending-up"
+                                        class="w-4 h-4"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+
+                            <!-- Gerir Formações -->
+                            <div class="card p-0 overflow-hidden border-slate-200">
+                                <div
+                                    class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                                    <h3 class="font-bold text-slate-700">Gerir Formações</h3>
+                                    <div class="flex gap-1">
+                                        <button
+                                            class="text-[10px] font-bold text-white bg-slate-800 px-2 py-1 rounded">Ativas</button>
+                                        <button
+                                            class="text-[10px] font-bold bg-white border text-slate-500 px-2 py-1 rounded hover:bg-slate-50">Finalizadas</button>
+                                    </div>
+                                </div>
+                                <table class="w-full dbar-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Formação</th>
+                                            <th>Cliente</th>
+                                            <th>Início</th>
+                                            <th>Fim Prev.</th>
+                                            <th>Progresso</th>
+                                            <th class="text-right">Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-courses-table-body" class="divide-y divide-slate-50">
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Controle de Conteúdo (Auditoria) -->
+                            <div
+                                class="card bg-slate-900 text-white border-slate-700 relative overflow-hidden p-6 rounded-2xl">
+                                <div class="absolute right-0 top-0 opacity-5 p-6"><i data-lucide="layers"
+                                        class="w-40 h-40 text-white"></i></div>
+                                <div class="relative z-10 flex justify-between items-start mb-6">
+                                    <div>
+                                        <h3 class="font-bold text-lg">Controle de Conteúdo</h3>
+                                        <p class="text-slate-400 text-sm">Auditoria de uploads.</p>
+                                    </div>
+                                    <button
+                                        class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm"
+                                        onclick="openDynamicModal('upload')"><i data-lucide="list" class="w-4 h-4"></i>
+                                        Ver Auditoria</button>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="space-y-3 text-xs">
+                                        <div class="flex justify-between border-b border-white/10 pb-2"><span>Guia
+                                                Prompts.pdf</span><span
+                                                class="text-teal-400 font-bold">Admin</span><span
+                                                class="text-slate-500">Hoje</span></div>
+                                        <div class="flex justify-between border-b border-white/10 pb-2"><span>Aula 1
+                                                Video</span><span class="text-blue-400 font-bold">Formador</span><span
+                                                class="text-slate-500">Ontem</span></div>
+                                        <div class="flex justify-between border-b border-white/10 pb-2"><span>Quiz
+                                                Diagnóstico</span><span
+                                                class="text-purple-400 font-bold">Gestor</span><span
+                                                class="text-slate-500">12/10</span></div>
+                                    </div>
+                                    <div class="h-32"><canvas id="adminContentChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Motor de Inquéritos -->
+                            <div class="card border-l-4 border-purple-500">
+                                <h3 class="font-bold text-slate-700 mb-3 text-sm uppercase flex items-center gap-2"><i
+                                        data-lucide="pie-chart" class="w-4 h-4 text-purple-500"></i> Motor de Inquéritos
+                                </h3>
+                                <div class="space-y-3">
+                                    <select class="input-clean bg-slate-50 text-xs">
+                                        <option>-- Selecionar Cliente --</option>
+                                        <option>CFAE Almada</option>
+                                    </select>
+                                    <select class="input-clean bg-slate-50 text-xs">
+                                        <option>-- Selecionar Formação --</option>
+                                        <option>Oficina IA</option>
+                                    </select>
+                                    <div class="p-3 bg-purple-50 rounded border border-purple-100">
+                                        <p class="text-[10px] font-bold text-purple-800 uppercase mb-1">Inquéritos
+                                            Ativos:</p>
+                                        <div class="flex flex-wrap gap-2"><span
+                                                class="bg-white px-2 py-0.5 rounded text-xs text-purple-600 border shadow-sm">Diagnóstico
+                                                S1</span><span
+                                                class="bg-white px-2 py-0.5 rounded text-xs text-purple-600 border shadow-sm">Satisfação
+                                                Final</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Utilizadores Recentes -->
+                            <div class="card p-0 overflow-hidden">
+                                <div
+                                    class="px-4 py-3 bg-slate-50 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase">
+                                    Utilizadores Recentes</div>
+                                <table class="w-full text-xs text-left">
+                                    <thead class="bg-white text-slate-400">
+                                        <tr>
+                                            <th class="px-4 py-2 font-medium">Nome</th>
+                                            <th class="px-4 py-2 font-medium">Perfil</th>
+                                            <th class="px-4 py-2 font-medium text-right">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-50">
+                                        <tr>
+                                            <td class="px-4 py-2">Ana Silva</td>
+                                            <td class="px-4 py-2"><span
+                                                    class="bg-orange-50 text-orange-600 px-1.5 rounded">Aluno</span>
+                                            </td>
+                                            <td class="px-4 py-2 text-right text-green-600 font-bold">Ativo</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2">João B.</td>
+                                            <td class="px-4 py-2"><span
+                                                    class="bg-teal-50 text-teal-600 px-1.5 rounded">Formador</span></td>
+                                            <td class="px-4 py-2 text-right text-green-600 font-bold">Ativo</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="px-4 py-2">Carlos M.</td>
+                                            <td class="px-4 py-2"><span
+                                                    class="bg-indigo-50 text-indigo-600 px-1.5 rounded">Gestor</span>
+                                            </td>
+                                            <td class="px-4 py-2 text-right text-slate-400">Desligado</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Simulação -->
+                            <div class="card bg-slate-50 border-dashed border-2 border-slate-300">
+                                <h3 class="font-bold text-slate-700 mb-3 text-sm flex items-center gap-2"><i
+                                        data-lucide="eye" class="w-4 h-4"></i> Simular Visões</h3>
+                                <div class="space-y-2">
+                                    <button onclick="enterSimulation('formador')"
+                                        class="w-full bg-white border hover:border-teal-500 text-slate-600 hover:text-teal-600 py-2 rounded text-xs font-bold transition flex items-center justify-between px-3 group">
+                                        <span>Formador</span> <i data-lucide="arrow-right"
+                                            class="w-3 h-3 opacity-0 group-hover:opacity-100"></i>
+                                    </button>
+                                    <button onclick="enterSimulation('gestor')"
+                                        class="w-full bg-white border hover:border-indigo-500 text-slate-600 hover:text-indigo-600 py-2 rounded text-xs font-bold transition flex items-center justify-between px-3 group">
+                                        <span>Gestor</span> <i data-lucide="arrow-right"
+                                            class="w-3 h-3 opacity-0 group-hover:opacity-100"></i>
+                                    </button>
+                                    <button onclick="enterSimulation('aluno')"
+                                        class="w-full bg-white border hover:border-orange-500 text-slate-600 hover:text-orange-600 py-2 rounded text-xs font-bold transition flex items-center justify-between px-3 group">
+                                        <span>Aluno</span> <i data-lucide="arrow-right"
+                                            class="w-3 h-3 opacity-0 group-hover:opacity-100"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- === 2. VISÃO FORMADOR (V3 COMPLETA) === -->
+                <div id="view-formador" class="hidden-panel space-y-6">
+                    <div class="flex gap-2 border-b border-slate-200 pb-1 mb-4 overflow-x-auto">
+                        <button onclick="switchFormadorTab('evolucao')"
+                            class="tab-btn px-4 py-2 text-sm font-bold text-teal-700 border-b-2 border-teal-600 transition-colors">Evolução</button>
+                        <button onclick="switchFormadorTab('conteudos')"
+                            class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-teal-600 transition-colors">Conteúdos</button>
+                        <button onclick="switchFormadorTab('gestao')"
+                            class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-teal-600 transition-colors">Notas</button>
+                        <button onclick="switchFormadorTab('projetos')"
+                            class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-teal-600 transition-colors">Projetos</button>
+                        <button onclick="switchFormadorTab('relatorio')"
+                            class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-teal-600 transition-colors">Portfólio</button>
+                        <button onclick="switchFormadorTab('recrutamento')"
+                            class="tab-btn px-4 py-2 text-sm font-medium text-slate-500 hover:text-teal-600 transition-colors">Recrutamento</button>
+                    </div>
+
+                    <!-- Tab Evolução -->
+                    <div id="tab-evolucao" class="v3-panel active">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <aside class="lg:col-span-3 space-y-4">
+                                <div class="card p-4">
+                                    <h3 class="label">Filtrar Categoria</h3><select id="categoryFilter"
+                                        class="input-clean"></select>
+                                </div>
+                                <div class="card p-4 h-full">
+                                    <h3 class="label">Participantes</h3>
+                                    <div id="participantList"
+                                        class="space-y-1 max-h-[400px] overflow-y-auto pr-1 custom-scrollbar"></div>
+                                </div>
+                            </aside>
+                            <div class="lg:col-span-9 space-y-6">
+                                <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="card p-4 flex flex-col items-center justify-center">
+                                        <h4 class="label">Total</h4>
+                                        <p id="totalParticipants" class="text-3xl font-black text-slate-700">0</p>
+                                    </div>
+                                    <div
+                                        class="card p-4 flex flex-col items-center justify-center border-b-4 border-emerald-500">
+                                        <h4 class="label text-emerald-600">Confiança</h4>
+                                        <p id="avgConfidenceGrowth" class="text-3xl font-black text-emerald-600">+35%
+                                        </p>
+                                    </div>
+                                    <div
+                                        class="card p-4 flex flex-col items-center justify-center border-b-4 border-amber-500">
+                                        <h4 class="label text-amber-600">Satisfação</h4>
+                                        <p id="avgSatisfactionEvolucao" class="text-3xl font-black text-amber-600">4.8
+                                        </p>
+                                    </div>
+                                </section>
+                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    <div class="card p-4">
+                                        <h3 class="font-bold text-slate-700 mb-4 text-sm">Evolução da Confiança Digital
+                                        </h3>
+                                        <div class="h-64"><canvas id="confidenceChart"></canvas></div>
+                                    </div>
+                                    <div class="card p-4">
+                                        <h3 class="font-bold text-slate-700 mb-4 text-sm">Categorias de Feedback</h3>
+                                        <div class="h-64"><canvas id="categoriesChart"></canvas></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Conteúdos -->
+                    <div id="tab-conteudos" class="v3-panel">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="card lg:col-span-2 space-y-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h3 class="font-bold text-slate-700">Gestão de Sala</h3>
+                                    <div class="flex gap-2">
+                                        <button onclick="openDynamicModal('bloco')" class="btn-secondary text-xs"><i
+                                                data-lucide="package" class="w-3 h-3"></i> Bloco</button>
+                                        <button onclick="openDynamicModal('sessao')" class="btn-secondary text-xs"><i
+                                                data-lucide="calendar" class="w-3 h-3"></i> Sessão</button>
+                                        <button onclick="openDynamicModal('upload')" class="btn-primary text-xs"><i
+                                                data-lucide="upload-cloud" class="w-3 h-3"></i> Upload</button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-slate-50 p-4 rounded-lg border border-dashed border-slate-300 text-center text-slate-500 text-sm italic">
+                                    Selecione um bloco ou sessão para ver os materiais.
+                                </div>
+                            </div>
+                            <div class="card space-y-4">
+                                <h3 class="font-bold text-slate-700">Ações Rápidas</h3>
+                                <button onclick="openDynamicModal('inquerito')"
+                                    class="w-full btn-secondary text-xs justify-center"><i data-lucide="clipboard-list"
+                                        class="w-3 h-3"></i> Novo Inquérito</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Tab Avaliação (Pauta Dinâmica) -->
+                    <div id="tab-avaliacao" class="v3-panel">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-9 card p-0 overflow-hidden border-slate-200">
+                                <div class="px-6 py-4 border-b bg-slate-50 flex justify-between items-center">
+                                    <h3 class="font-bold text-slate-700">Pauta de Avaliação</h3>
+                                    <div class="flex gap-2">
+                                        <button onclick="openDynamicModal('avaliacao')"
+                                            class="text-xs bg-white border border-dashed border-slate-300 text-slate-600 px-3 py-1 rounded font-bold hover:text-teal-600">+
+                                            Avaliação</button>
+                                        <button onclick="addNewCriteria()"
+                                            class="text-xs bg-white border border-dashed border-slate-300 text-slate-600 px-3 py-1 rounded font-bold hover:text-teal-600">+
+                                            Critério</button>
+                                        <button onclick="exportTableToCSV()"
+                                            class="text-xs bg-teal-50 text-teal-700 px-3 py-1 rounded font-bold hover:bg-teal-100">Exportar</button>
+                                    </div>
+                                </div>
+                                <div class="overflow-x-auto custom-scrollbar">
+                                    <table class="w-full text-left v3-table">
+                                        <thead id="aba2-table-head"></thead>
+                                        <tbody id="aba2-evaluation-table-body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="lg:col-span-3 space-y-6">
+                                <div class="card p-4 bg-yellow-50 border-yellow-200">
+                                    <h4 class="label text-yellow-800 mb-2">Edição Rápida</h4>
+                                    <p class="text-xs text-yellow-700 leading-relaxed">Clique nas células da tabela para
+                                        editar notas. As médias atualizam automaticamente.</p>
+                                </div>
+                                <div class="card p-4">
+                                    <h4 class="label mb-2">Média da Turma</h4>
+                                    <div class="h-40"><canvas id="aba2-totalScoresChart"></canvas></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Notas -->
+                    <div id="tab-gestao" class="v3-panel">
+                        <div class="card-app p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="font-bold text-slate-700">Livro de Ponto e Notas</h3>
+                                <div class="flex gap-2">
+                                    <button onclick="openDynamicModal('avaliacao')" class="btn-primary text-xs"><i
+                                            data-lucide="plus-circle" class="w-3 h-3"></i> Adicionar Avaliação</button>
+                                    <button class="btn-secondary text-xs"><i data-lucide="download" class="w-3 h-3"></i>
+                                        Exportar</button>
+                                </div>
+                            </div>
+                            <table class="w-full dbar-table text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">Aluno</th>
+                                        <th>S1</th>
+                                        <th>S2</th>
+                                        <th class="bg-blue-50 border-l">AA1</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-left font-bold">Ana Silva</td>
+                                        <td><i data-lucide="check" class="w-4 h-4 text-green-500 mx-auto"></i></td>
+                                        <td><i data-lucide="x" class="w-4 h-4 text-red-500 mx-auto"></i></td>
+                                        <td class="bg-blue-50 border-l">18.5</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <!-- Tab Projetos -->
+                    <div id="tab-projetos" class="v3-panel">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-7 card p-0 overflow-hidden">
+                                <div class="p-4 border-b bg-slate-50"><input id="projFilter" type="text"
+                                        placeholder="Filtrar projetos..." class="input-clean"></div>
+                                <table id="projTable" class="w-full text-left v3-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Título</th>
+                                            <th>Autores</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="lg:col-span-5 card p-6 bg-slate-50/50 border-dashed space-y-4">
+                                <h3 id="projTitle" class="text-lg font-bold text-teal-800">Selecione um Projeto</h3>
+                                <div id="projResumo"
+                                    class="text-sm text-slate-600 italic p-4 bg-white border rounded-lg shadow-sm min-h-[100px]">
+                                </div>
+                                <div id="projMediaSection" class="hidden border-t border-slate-200 pt-4">
+                                    <h4 class="label mb-3 text-slate-600">Avaliação de Pares</h4>
+                                    <div id="projMediasFinais" class="flex flex-wrap gap-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Portfólio -->
+                    <div id="tab-relatorio" class="v3-panel">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold text-slate-800">Portfólio Individual</h2>
+                            <div class="flex gap-2">
+                                <select id="relatorio-participant-select"
+                                    class="input-clean max-w-xs bg-white"></select>
+                                <button onclick="window.print()" class="btn-primary bg-slate-800 hover:bg-slate-900"><i
+                                        data-lucide="printer" class="w-4 h-4"></i> PDF</button>
+                            </div>
+                        </div>
+                        <div id="relatorio-content">
+                            <div id="relatorio-empty-state"
+                                class="p-16 text-center border-2 border-dashed border-slate-200 rounded-xl text-slate-400 flex flex-col items-center gap-4">
+                                <div class="bg-slate-50 p-4 rounded-full"><i data-lucide="user"
+                                        class="w-8 h-8 text-slate-300"></i></div>
+                                Selecione um aluno para visualizar o portfólio completo.
+                            </div>
+                            <div id="relatorio-view" class="hidden space-y-6 animate-fade-in">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div class="card p-5 border-l-4 border-teal-500 bg-teal-50/30">
+                                        <p class="label text-teal-700">Evolução</p>
+                                        <p id="view-confianca-text" class="text-2xl font-black text-slate-800 mt-1">--
+                                        </p>
+                                    </div>
+                                    <div class="card p-5 border-l-4 border-blue-500 bg-blue-50/30">
+                                        <p class="label text-blue-700">Nota Final</p>
+                                        <p id="view-nota-text" class="text-2xl font-black text-slate-800 mt-1">--</p>
+                                    </div>
+                                    <div class="card p-5 border-l-4 border-purple-500 bg-purple-50/30">
+                                        <p class="label text-purple-700">Presença</p>
+                                        <p id="view-presenca-text" class="text-2xl font-black text-slate-800 mt-1">--
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-3 gap-6">
+                                    <div class="col-span-1 space-y-4">
+                                        <div class="card p-4">
+                                            <div class="h-48"><canvas id="report-radar-chart"></canvas></div>
+                                        </div>
+                                        <div class="card p-5 bg-indigo-50 border-indigo-100 text-sm text-indigo-900 leading-relaxed italic"
+                                            id="view-feedback-formador"></div>
+                                    </div>
+                                    <div class="col-span-2 card p-6">
+                                        <h4 class="font-bold text-slate-700 mb-4 border-b pb-2 flex items-center gap-2">
+                                            <i data-lucide="files" class="w-4 h-4 text-slate-400"></i> Artefactos
+                                            Submetidos
+                                        </h4>
+                                        <div id="view-projects-list" class="space-y-3"></div>
+                                    </div>
+                                </div>
+                                <div id="dossier-final-report-container" class="print-only-robust mt-8">
+                                    <div id="dossier-final-report-content"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Recrutamento -->
+                    <div id="tab-recrutamento" class="v3-panel">
+                        <div class="card p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-lg font-bold text-slate-800">Seleção Grupo Focal</h2>
+                                <button onclick="document.getElementById('school-menu').classList.toggle('hidden')"
+                                    class="btn-secondary text-xs"><i data-lucide="filter" class="w-3 h-3"></i> Filtrar
+                                    Escolas</button>
+                                <div id="school-menu"
+                                    class="hidden absolute right-10 top-40 bg-white shadow-xl border p-3 rounded-lg z-20 mt-2 w-64 max-h-60 overflow-y-auto custom-scrollbar">
+                                    <div id="school-checkboxes" class="space-y-2"></div>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto rounded-lg border border-slate-100">
+                                <table class="w-full text-left v3-table">
+                                    <thead class="bg-slate-50">
+                                        <tr>
+                                            <th class="w-10 text-center"><input type="checkbox"
+                                                    class="rounded text-teal-600 focus:ring-teal-500"></th>
+                                            <th>Nome</th>
+                                            <th>Escola</th>
+                                            <th>Evolução</th>
+                                            <th>Nota</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recrutamento-table-body" class="bg-white divide-y divide-slate-50">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- === 3. VISÃO GESTOR === -->
+                <div id="view-gestor" class="hidden-panel h-full flex flex-col">
+    
+    <header class="flex justify-between items-center mb-8 pb-6 border-b border-slate-200">
         <div>
-            <div class="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-white/5">
-                <div class="w-8 h-8 bg-gradient-to-tr from-cyan-500 to-purple-600 rounded-lg flex items-center justify-center font-bold font-display text-white">D</div>
-                <span class="ml-3 font-display font-bold text-lg hidden lg:block tracking-tight">DBAR<span class="text-cyan-400">.io</span></span>
+            <div class="flex items-center gap-3 mb-1">
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Corporate ROI Console</h2>
+                <span class="bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">Premium</span>
             </div>
-
-            <nav class="mt-8 px-2 space-y-2">
-                <button onclick="switchTab('overview', this)" class="nav-item w-full flex items-center gap-3 px-4 py-3 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-xl transition-all group">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                    <span class="hidden lg:block text-sm font-medium">Visão Geral</span>
-                </button>
-                
-                <button onclick="switchTab('team', this)" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent rounded-xl transition-all group">
-                    <i data-lucide="users" class="w-5 h-5 group-hover:text-purple-400 transition-colors"></i>
-                    <span class="hidden lg:block text-sm font-medium">Equipa & Acessos</span>
-                </button>
-                
-                <button onclick="switchTab('shadow', this)" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent rounded-xl transition-all group">
-                    <i data-lucide="shield-alert" class="w-5 h-5 group-hover:text-rose-400 transition-colors"></i>
-                    <span class="hidden lg:block text-sm font-medium">Shadow IA <span class="bg-rose-500/20 text-rose-400 text-[9px] px-2 py-0.5 rounded ml-2">3</span></span>
-                </button>
-                
-                <button onclick="switchTab('reports', this)" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 border border-transparent rounded-xl transition-all group">
-                    <i data-lucide="file-bar-chart" class="w-5 h-5 group-hover:text-emerald-400 transition-colors"></i>
-                    <span class="hidden lg:block text-sm font-medium">Relatórios ROI</span>
-                </button>
-            </nav>
+            <p class="text-slate-500 text-sm">TechSolutions SA • <span class="text-emerald-600 font-bold">Sistema Operacional</span></p>
         </div>
-
-        <div class="p-4 border-t border-white/5">
-            <a href="index.html" class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg transition-all text-slate-400">
-                <i data-lucide="log-out" class="w-5 h-5"></i>
-                <span class="hidden lg:block text-xs font-bold uppercase tracking-widest">Sair</span>
-            </a>
-        </div>
-    </aside>
-
-    <main class="flex-1 overflow-y-auto relative scroll-smooth bg-slate-950/50">
         
-        <header class="sticky top-0 z-40 glass-panel border-b-0 border-b-white/5 px-8 py-5 flex justify-between items-center backdrop-blur-xl">
-            <div>
-                <h2 id="page-title" class="text-xl font-display font-bold text-white">Visão Geral</h2>
-                <p class="text-xs text-slate-400">Atualizado em tempo real • <span class="text-emerald-400">Conectado</span></p>
+        <div class="flex gap-3">
+             <div class="hidden md:flex bg-slate-100 p-1 rounded-lg border border-slate-200">
+                <button class="px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors">7d</button>
+                <button class="px-3 py-1.5 text-xs font-bold text-white bg-indigo-600 rounded-md shadow-sm">30d</button>
+                <button class="px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors">3M</button>
             </div>
-            <div class="flex items-center gap-3">
-                <button class="bg-white/5 hover:bg-white/10 p-2.5 rounded-lg border border-white/10 text-white transition-all"><i data-lucide="bell" class="w-5 h-5"></i></button>
-            </div>
-        </header>
-
-        <div class="p-4 md:p-8 max-w-7xl mx-auto space-y-6">
-
-            <section id="view-overview" class="view-section fade-in">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-cyan-500/30 transition-all">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="p-2 bg-cyan-500/10 rounded-lg text-cyan-400"><i data-lucide="clock" class="w-6 h-6"></i></div>
-                            <span class="text-[10px] font-bold bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded border border-emerald-500/20">+12%</span>
-                        </div>
-                        <h3 class="text-4xl font-display font-bold text-white">142h</h3>
-                        <p class="text-sm text-slate-400 mt-1">Recuperadas este mês</p>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-2xl relative overflow-hidden group hover:border-purple-500/30 transition-all">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400"><i data-lucide="shield-check" class="w-6 h-6"></i></div>
-                        </div>
-                        <h3 class="text-4xl font-display font-bold text-white">8.4</h3>
-                        <p class="text-sm text-slate-400 mt-1">Score DBAR (Confiança)</p>
-                        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-3">
-                            <div class="bg-purple-500 h-full w-[84%]"></div>
-                        </div>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-2xl bg-rose-950/10 border-rose-500/20 hover:bg-rose-900/20 transition-all cursor-pointer" onclick="switchTab('shadow', document.querySelectorAll('.nav-item')[2])">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="p-2 bg-rose-500/10 rounded-lg text-rose-400 animate-pulse"><i data-lucide="alert-triangle" class="w-6 h-6"></i></div>
-                            <span class="text-[10px] font-bold text-rose-400 uppercase tracking-widest">Ação Necessária</span>
-                        </div>
-                        <h3 class="text-4xl font-display font-bold text-white">3</h3>
-                        <p class="text-sm text-slate-300 mt-1">Incidentes Críticos</p>
-                    </div>
-                </div>
-
-                <div class="glass-panel p-6 rounded-2xl">
-                    <h3 class="text-lg font-bold text-white mb-6">Adoção de Ferramentas Oficiais</h3>
-                    <div class="flex items-end justify-between h-64 gap-2 sm:gap-4 px-2 border-b border-white/5 pb-4">
-                        <div class="w-full bg-slate-800/50 rounded-t h-[30%] bar-anim"></div>
-                        <div class="w-full bg-slate-800/50 rounded-t h-[45%] bar-anim" style="animation-delay: 0.1s"></div>
-                        <div class="w-full bg-cyan-900/40 rounded-t h-[55%] bar-anim" style="animation-delay: 0.2s"></div>
-                        <div class="w-full bg-cyan-500 rounded-t h-[85%] bar-anim shadow-[0_0_20px_rgba(6,182,212,0.3)]" style="animation-delay: 0.3s"></div>
-                        <div class="w-full bg-cyan-600 rounded-t h-[78%] bar-anim" style="animation-delay: 0.4s"></div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="view-team" class="view-section hidden fade-in">
-                <div class="glass-panel rounded-2xl overflow-hidden">
-                    <div class="p-6 border-b border-white/5 flex justify-between items-center">
-                        <div>
-                            <h3 class="text-lg font-bold text-white">Membros da Organização</h3>
-                            <p class="text-xs text-slate-400">12 Licenças Ativas • 2 Pendentes</p>
-                        </div>
-                        <button class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all">
-                            + Convidar
-                        </button>
-                    </div>
-                    <table class="w-full text-left text-sm text-slate-400">
-                        <thead class="bg-white/5 text-xs uppercase font-bold text-slate-300">
-                            <tr>
-                                <th class="px-6 py-4">Utilizador</th>
-                                <th class="px-6 py-4">Função</th>
-                                <th class="px-6 py-4">Uso de IA</th>
-                                <th class="px-6 py-4 text-right">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">RM</div>
-                                    Ricardo Mendes
-                                </td>
-                                <td class="px-6 py-4">CTO</td>
-                                <td class="px-6 py-4">
-                                    <div class="w-24 h-1.5 bg-slate-800 rounded-full"><div class="w-[80%] h-full bg-emerald-500 rounded-full"></div></div>
-                                </td>
-                                <td class="px-6 py-4 text-right"><span class="text-emerald-400 text-xs font-bold">Online</span></td>
-                            </tr>
-                            <tr class="hover:bg-white/5 transition-colors">
-                                <td class="px-6 py-4 font-medium text-white flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">AM</div>
-                                    Ana Martins
-                                </td>
-                                <td class="px-6 py-4">Financeiro</td>
-                                <td class="px-6 py-4">
-                                    <div class="w-24 h-1.5 bg-slate-800 rounded-full"><div class="w-[40%] h-full bg-yellow-500 rounded-full"></div></div>
-                                </td>
-                                <td class="px-6 py-4 text-right"><span class="text-slate-500 text-xs font-bold">Ausente</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <section id="view-shadow" class="view-section hidden fade-in">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="glass-panel p-6 rounded-2xl border-l-4 border-rose-500">
-                        <h3 class="text-lg font-bold text-white mb-2">Bloqueios Recentes</h3>
-                        <p class="text-sm text-slate-400 mb-6">Tentativas de envio de dados sensíveis para IAs públicas.</p>
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-4 p-3 bg-rose-500/10 rounded-xl border border-rose-500/20">
-                                <i data-lucide="shield-off" class="text-rose-400"></i>
-                                <div>
-                                    <p class="text-sm font-bold text-white">CSV Clientes -> ChatGPT</p>
-                                    <p class="text-xs text-rose-300">Bloqueado há 2h • IP: 192.168.1.42</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-4 p-3 bg-rose-500/10 rounded-xl border border-rose-500/20">
-                                <i data-lucide="shield-off" class="text-rose-400"></i>
-                                <div>
-                                    <p class="text-sm font-bold text-white">Código Fonte -> Claude.ai</p>
-                                    <p class="text-xs text-rose-300">Bloqueado há 5h • Dev Team</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="glass-panel p-6 rounded-2xl">
-                        <h3 class="text-lg font-bold text-white mb-4">Domínios Monitorizados</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg">
-                                <span class="text-sm text-slate-300">chat.openai.com</span>
-                                <span class="text-xs font-bold text-yellow-400">Monitorizado</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg">
-                                <span class="text-sm text-slate-300">midjourney.com</span>
-                                <span class="text-xs font-bold text-emerald-400">Permitido (Design)</span>
-                            </div>
-                            <div class="flex justify-between p-3 bg-white/5 rounded-lg">
-                                <span class="text-sm text-slate-300">huggingface.co</span>
-                                <span class="text-xs font-bold text-rose-500">Bloqueado</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="view-reports" class="view-section hidden fade-in">
-                <div class="glass-panel p-8 rounded-2xl text-center">
-                    <div class="inline-flex p-4 bg-emerald-500/10 rounded-full text-emerald-400 mb-4">
-                        <i data-lucide="file-check" class="w-8 h-8"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-2">Relatórios Disponíveis</h3>
-                    <p class="text-slate-400 max-w-md mx-auto mb-8">Faça o download das auditorias mensais de produtividade e segurança.</p>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto text-left">
-                        <div class="p-4 border border-white/10 rounded-xl hover:bg-white/5 transition-all flex justify-between items-center group cursor-pointer">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="file-text" class="text-cyan-400"></i>
-                                <div>
-                                    <p class="font-bold text-white">Audit_Fev_2026.pdf</p>
-                                    <p class="text-xs text-slate-500">2.4 MB • Gerado ontem</p>
-                                </div>
-                            </div>
-                            <i data-lucide="download" class="text-slate-500 group-hover:text-cyan-400 transition-colors"></i>
-                        </div>
-                        <div class="p-4 border border-white/10 rounded-xl hover:bg-white/5 transition-all flex justify-between items-center group cursor-pointer">
-                            <div class="flex items-center gap-3">
-                                <i data-lucide="file-text" class="text-cyan-400"></i>
-                                <div>
-                                    <p class="font-bold text-white">Audit_Jan_2026.pdf</p>
-                                    <p class="text-xs text-slate-500">2.1 MB • Arquivado</p>
-                                </div>
-                            </div>
-                            <i data-lucide="download" class="text-slate-500 group-hover:text-cyan-400 transition-colors"></i>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
+            <button class="btn-primary bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 text-xs">
+                <i data-lucide="download" class="w-4 h-4"></i> Relatório PDF
+            </button>
         </div>
-    </main>
+    </header>
+
+    <div class="space-y-6 overflow-y-auto pr-2 pb-10 custom-scrollbar">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="card bg-white border border-slate-200 shadow-sm relative overflow-hidden group hover:border-teal-500/50 transition-all p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-teal-50 rounded-lg text-teal-600"><i data-lucide="clock" class="w-6 h-6"></i></div>
+                    <span class="text-[10px] font-bold bg-emerald-50 text-emerald-600 px-2 py-1 rounded border border-emerald-100">+12.5%</span>
+                </div>
+                <div class="relative z-10">
+                    <h3 class="text-4xl font-black text-slate-800" id="gestor-kpi-hours">142h</h3>
+                    <p class="text-sm text-slate-500 mt-1 font-medium">Recuperadas este mês</p>
+                    <p class="text-xs text-slate-400 mt-4 pt-3 border-t border-slate-100 flex items-center gap-1">
+                        <span class="text-emerald-600 font-bold" id="gestor-kpi-money">€3.720</span> poupados em OPEX
+                    </p>
+                </div>
+            </div>
+
+            <div class="card bg-white border border-slate-200 shadow-sm relative overflow-hidden group hover:border-indigo-500/50 transition-all p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600"><i data-lucide="shield-check" class="w-6 h-6"></i></div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nível A</span>
+                </div>
+                <h3 class="text-4xl font-black text-slate-800">8.4<span class="text-xl text-slate-400 font-medium">/10</span></h3>
+                <p class="text-sm text-slate-500 mt-1 mb-3 font-medium">Índice de Confiança (DBAR)</p>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                    <div class="bg-gradient-to-r from-indigo-500 to-teal-400 h-full w-[84%]"></div>
+                </div>
+            </div>
+
+            <div class="card bg-white border border-rose-100 shadow-sm relative overflow-hidden group hover:bg-rose-50/30 transition-all p-6 cursor-pointer">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="p-2 bg-rose-50 rounded-lg text-rose-500 animate-pulse"><i data-lucide="alert-triangle" class="w-6 h-6"></i></div>
+                    <span class="text-[10px] font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded uppercase tracking-widest">Atenção</span>
+                </div>
+                <h3 class="text-4xl font-black text-slate-800">3</h3>
+                <p class="text-sm text-slate-500 mt-1 font-medium">Incidentes Shadow IA</p>
+                <p class="text-xs text-rose-600/80 mt-4 flex items-center gap-1 font-bold group-hover:translate-x-1 transition-transform">
+                    Ver detalhes de bloqueio <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-2 card p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-500"></i> Adoção de Ferramentas Oficiais
+                    </h3>
+                    <button class="text-xs text-slate-400 hover:text-indigo-600 font-medium flex items-center gap-1">
+                        <i data-lucide="download" class="w-3 h-3"></i> CSV
+                    </button>
+                </div>
+                <div class="flex items-end justify-between h-64 gap-2 sm:gap-4 px-2 border-b border-slate-100 pb-4">
+                    <div class="w-full bg-slate-100 rounded-t h-[30%] group relative hover:bg-indigo-100 transition-colors"></div>
+                    <div class="w-full bg-slate-100 rounded-t h-[45%] group relative hover:bg-indigo-100 transition-colors"></div>
+                    <div class="w-full bg-indigo-100 rounded-t h-[55%] group relative hover:bg-indigo-200 transition-colors"></div>
+                    <div class="w-full bg-indigo-500 rounded-t h-[85%] group relative shadow-lg shadow-indigo-500/20">
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">85%</div>
+                    </div>
+                    <div class="w-full bg-indigo-600 rounded-t h-[78%] group relative"></div>
+                </div>
+                <div class="flex justify-between mt-4 text-xs text-slate-400 font-bold uppercase tracking-widest px-2">
+                    <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                </div>
+            </div>
+
+            <div class="card p-0 overflow-hidden flex flex-col">
+                <div class="p-5 border-b border-slate-100 bg-slate-50/50">
+                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> Live Feed
+                    </h3>
+                </div>
+                <div class="flex-1 overflow-y-auto p-5 space-y-0 custom-scrollbar max-h-[300px]">
+                    <div class="border-l-2 border-emerald-500 pl-4 pb-6 relative">
+                        <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-white"></div>
+                        <p class="text-[10px] text-slate-400 mb-0.5 font-bold uppercase tracking-wide">Há 2 min</p>
+                        <p class="text-sm text-slate-800 font-bold">Relatório Financeiro Gerado</p>
+                        <p class="text-xs text-slate-500 mt-1">Ana M. poupou ~45min usando automação.</p>
+                    </div>
+                    <div class="border-l-2 border-rose-500 pl-4 pb-6 relative">
+                        <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-rose-500 ring-4 ring-white"></div>
+                        <p class="text-[10px] text-slate-400 mb-0.5 font-bold uppercase tracking-wide">Há 15 min</p>
+                        <p class="text-sm text-slate-800 font-bold">Bloqueio de Dados Pessoais</p>
+                        <p class="text-xs text-slate-500 mt-1">Guest_02 tentou enviar CSV para GPT público.</p>
+                    </div>
+                    <div class="border-l-2 border-slate-200 pl-4 relative">
+                        <div class="absolute -left-[5px] top-0 w-2.5 h-2.5 rounded-full bg-slate-300 ring-4 ring-white"></div>
+                        <p class="text-[10px] text-slate-400 mb-0.5 font-bold uppercase tracking-wide">Há 1h</p>
+                        <p class="text-sm text-slate-800 font-bold">Novo membro adicionado</p>
+                        <p class="text-xs text-slate-500 mt-1">Equipa de Marketing (3 licenças)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-0 overflow-hidden border border-slate-200 shadow-sm">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg">Governança de Equipa</h3>
+                    <p class="text-xs text-slate-500 mt-1">Gerir acessos e monitorizar conformidade.</p>
+                </div>
+                <input type="text" placeholder="Filtrar por nome..." class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-600 focus:border-indigo-500 outline-none w-48 shadow-sm">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 text-xs uppercase font-bold text-slate-500 border-b border-slate-200">
+                        <tr>
+                            <th class="px-6 py-4">Colaborador</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4">Ferramentas</th>
+                            <th class="px-6 py-4 text-right">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white">
+                        <tr class="hover:bg-slate-50 transition-colors group">
+                            <td class="px-6 py-4 font-medium text-slate-700 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-xs font-bold border border-indigo-200">RM</div>
+                                <div>
+                                    <p class="font-bold">Ricardo Mendes</p>
+                                    <p class="text-xs text-slate-400 font-normal">CTO</p>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4"><span class="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2.5 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span> Ativo</span></td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <i data-lucide="bot" class="w-4 h-4 text-slate-400 hover:text-indigo-500 cursor-pointer transition"></i>
+                                <i data-lucide="code" class="w-4 h-4 text-slate-400 hover:text-indigo-500 cursor-pointer transition"></i>
+                            </td>
+                            <td class="px-6 py-4 text-right"><button class="text-indigo-600 font-bold text-xs hover:text-indigo-800 opacity-0 group-hover:opacity-100 transition-opacity">Gerir Acesso</button></td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 transition-colors group">
+                            <td class="px-6 py-4 font-medium text-slate-700 flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-xs font-bold border border-rose-200">SP</div>
+                                <div>
+                                    <p class="font-bold">Sofia Paiva</p>
+                                    <p class="text-xs text-slate-400 font-normal">Marketing</p>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4"><span class="bg-rose-50 text-rose-600 border border-rose-100 px-2.5 py-1 rounded-full text-xs font-bold flex items-center w-fit gap-1"><span class="w-1.5 h-1.5 bg-rose-500 rounded-full"></span> Risco</span></td>
+                            <td class="px-6 py-4 flex gap-2">
+                                <i data-lucide="message-square" class="w-4 h-4 text-slate-400 hover:text-indigo-500 cursor-pointer transition"></i>
+                            </td>
+                            <td class="px-6 py-4 text-right"><button class="text-rose-600 font-bold text-xs hover:text-rose-800 opacity-0 group-hover:opacity-100 transition-opacity">Auditar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+                <!-- === 4. VISÃO ALUNO === -->
+                <div id="view-aluno" class="hidden-panel space-y-8">
+                    <div class="bg-white rounded-xl border border-orange-100 shadow-sm p-8 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-1.5 bg-orange-100">
+                            <div class="h-full bg-orange-500 w-[65%] shadow-[0_0_10px_rgba(249,115,22,0.5)]"></div>
+                        </div>
+                        <div class="flex justify-between items-end relative z-10">
+                            <div>
+                                <p class="text-xs font-bold text-orange-600 uppercase tracking-wider mb-2">Módulo Atual:
+                                    Ética na IA</p>
+                                <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Olá, Estudante!</h2>
+                                <p class="text-slate-500 text-sm mt-2 font-medium">Concluíste 65% do curso "Oficina IA -
+                                    Almada".</p>
+                            </div>
+                            <div class="text-right hidden md:block">
+                                <p class="label">Classificação Atual</p>
+                                <p class="text-4xl font-black text-orange-500">16.5 <span
+                                        class="text-lg text-slate-300 font-medium">/20</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-2 space-y-6">
+                            <div
+                                class="bg-orange-50 border-l-4 border-orange-500 p-5 rounded-r-lg shadow-sm flex items-start gap-4 transition hover:shadow-md">
+                                <div class="bg-orange-100 p-2.5 rounded-lg text-orange-600 mt-0.5"><i
+                                        data-lucide="alert-circle" class="w-6 h-6"></i></div>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-orange-900 text-lg">Ação Necessária</h4>
+                                    <p class="text-sm text-orange-800 mt-1">O formador lançou um "Diagnóstico de
+                                        Competências". Tens até amanhã para responder.</p>
+                                </div>
+                                <button
+                                    class="bg-white text-orange-700 border border-orange-200 px-5 py-2 rounded-lg text-sm font-bold hover:bg-orange-100 hover:border-orange-300 transition shadow-sm">Responder</button>
+                            </div>
+                            <div class="card flex items-center gap-5 p-6 border-l-4 border-blue-500">
+                                <div class="bg-slate-100 p-4 rounded-xl text-slate-500"><i data-lucide="file-code"
+                                        class="w-8 h-8"></i></div>
+                                <div class="flex-1">
+                                    <p class="font-bold text-xl text-slate-800">Projeto Final</p>
+                                    <p class="text-sm text-slate-500 mt-1 font-medium"><span class="text-red-500">2 Dias
+                                            Restantes</span> • Prompt Engineering</p>
+                                </div>
+                                <button onclick="openDynamicModal('upload')"
+                                    class="btn-primary bg-slate-900 hover:bg-black text-white px-6 py-2.5 shadow-lg"><i
+                                        data-lucide="upload" class="w-4 h-4"></i> Submeter</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i data-lucide="activity"
+                                    class="w-4 h-4 text-orange-500"></i> Minha Evolução</h3>
+                            <div class="h-48"><canvas id="student-evolution-chart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
 
     <script>
+        // --- CONFIGURAÇÃO E HELPERS ---
+        Chart.register(ChartDataLabels);
         lucide.createIcons();
 
-        function switchTab(viewId, btnElement) {
-            // 1. Esconder todas as secções
-            document.querySelectorAll('.view-section').forEach(el => {
-                el.classList.add('hidden');
+        // --- MOCK DATABASE (Expansível e Alinhado ao Supabase) ---
+        const mockStore = {
+            organizations: [],
+            profiles: [],
+            courses: [],
+            enrollments: [],
+            assessments: [], // Notas e Critérios
+            roi_metrics: []  // KPIs de Gestão
+        };
+
+        // --- DATABASE SEEDING (POPULAR DADOS) ---
+        function initMockData() {
+            // 1. Organizações
+            mockStore.organizations = [
+                { id: 'org_01', name: 'CFAE Almada', type: 'school' },
+                { id: 'org_02', name: 'TechSolutions SA', type: 'corporate' }
+            ];
+
+            // 2. Perfis (Users)
+            mockStore.profiles = [
+                { id: 'usr_admin', full_name: 'Renielton S.', role: 'admin', organization_id: 'org_01' },
+                { id: 'usr_tutor1', full_name: 'João B.', role: 'tutor', organization_id: 'org_01' }, // Formador
+                { id: 'usr_manager1', full_name: 'Carlos M.', role: 'manager', organization_id: 'org_02' }, // Gestor
+                // Alunos (Batch)
+                { id: 'usr_s1', full_name: 'Ana Silva', role: 'student', organization_id: 'org_01' },
+                { id: 'usr_s2', full_name: 'Bruno Costa', role: 'student', organization_id: 'org_01' },
+                { id: 'usr_s3', full_name: 'Carla Dias', role: 'student', organization_id: 'org_01' },
+                { id: 'usr_s4', full_name: 'Daniel F.', role: 'student', organization_id: 'org_01' },
+                { id: 'usr_s5', full_name: 'Elsa M.', role: 'student', organization_id: 'org_01' }
+            ];
+
+            // 3. Cursos (Formações)
+            mockStore.courses = [
+                {
+                    id: 'course_01',
+                    title: 'Oficina IA - Almada',
+                    client_org_id: 'org_01',
+                    start_date: '2025-10-01',
+                    end_date: '2025-11-30',
+                    is_active: true,
+                    progress: 70
+                },
+                {
+                    id: 'course_02',
+                    title: 'Corporate ROI Tech',
+                    client_org_id: 'org_02',
+                    start_date: '2025-10-15',
+                    end_date: '2025-12-15',
+                    is_active: true,
+                    progress: 30
+                }
+            ];
+
+            // 4. Matrículas (Enrollments)
+            // Inscrever alunos no curso 01
+            ['usr_s1', 'usr_s2', 'usr_s3', 'usr_s4', 'usr_s5'].forEach((uid, idx) => {
+                mockStore.enrollments.push({
+                    id: `enr_${uid}_c1`,
+                    user_id: uid,
+                    course_id: 'course_01',
+                    is_active: true,
+                    // Campos extras para display rápido
+                    confidence_start: 2 + (idx * 0.2),
+                    confidence_current: 3.5 + (idx * 0.1),
+                    final_score_preview: 14 + idx
+                });
             });
 
-            // 2. Mostrar a secção desejada
-            const target = document.getElementById('view-' + viewId);
-            target.classList.remove('hidden');
-            // Reiniciar animação
-            target.classList.remove('fade-in');
-            void target.offsetWidth; // Trigger reflow
-            target.classList.add('fade-in');
-
-            // 3. Atualizar Título
-            const titles = {
-                'overview': 'Visão Geral',
-                'team': 'Gestão de Equipa',
-                'shadow': 'Monitorização Shadow IA',
-                'reports': 'Relatórios Financeiros'
-            };
-            document.getElementById('page-title').innerText = titles[viewId];
-
-            // 4. Atualizar Estilos do Menu
-            document.querySelectorAll('.nav-item').forEach(el => {
-                // Remover estilo ativo
-                el.classList.remove('bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/20');
-                el.classList.add('text-slate-400', 'border-transparent');
+            // 5. Avaliações (Assessments - Pauta)
+            // Criar notas para cada aluno inscrito
+            mockStore.enrollments.forEach(enr => {
+                // Nota Base (Total)
+                mockStore.assessments.push({
+                    id: `asm_${enr.id}_total`,
+                    enrollment_id: enr.id,
+                    criteria_key: 'total', // identificador interno
+                    score_value: 12 + Math.random() * 6, // Random 12-18
+                    max_score: 20
+                });
+                // Critério Extra: Criatividade
+                mockStore.assessments.push({
+                    id: `asm_${enr.id}_criat`,
+                    enrollment_id: enr.id,
+                    criteria_key: 'Criatividade',
+                    score_value: 3 + Math.random() * 2, // Random 3-5
+                    max_score: 5,
+                    is_extra_criteria: true
+                });
             });
 
-            // Adicionar estilo ativo ao clicado
-            btnElement.classList.add('bg-cyan-500/10', 'text-cyan-400', 'border-cyan-500/20');
-            btnElement.classList.remove('text-slate-400', 'border-transparent');
+            // 6. Métricas ROI (Para Gestor)
+            mockStore.roi_metrics = [
+                {
+                    id: 'roi_01',
+                    enrollment_id: 'global_tech',
+                    task_name: 'Automação de Reports',
+                    minutes_saved_per_task: 45,
+                    frequency_weekly: 150, // Equipe toda
+                    estimated_monetary_value: 3720
+                },
+                {
+                    id: 'roi_02',
+                    enrollment_id: 'global_tech',
+                    task_name: 'Análise de Dados',
+                    minutes_saved_per_task: 120,
+                    frequency_weekly: 40,
+                    estimated_monetary_value: 1500
+                }
+            ];
+
+            console.log("MOCK DB INITIALIZED", mockStore);
         }
+
+        // --- STATE DE APLICAÇÃO ---
+        let currentRole = 'admin';
+        let currentContextId = null; // ID do curso ou projeto selecionado
+
+        // --- RENDERIZAÇÃO: ADMIN ---
+        function renderAdminDashboard() {
+            // 1. KPIs
+            const activeCourses = mockStore.courses.filter(c => c.is_active).length;
+            const totalStudents = mockStore.enrollments.length;
+
+            // Popula tabela
+            const tbody = document.getElementById('admin-courses-table-body');
+            if (tbody) {
+                tbody.innerHTML = mockStore.courses.map(c => {
+                    const org = mockStore.organizations.find(o => o.id === c.client_org_id);
+                    const roleToEnter = org.type === 'corporate' ? 'gestor' : 'formador';
+                    const colorClass = roleToEnter === 'gestor' ? 'indigo' : 'teal';
+
+                    return `
+                    <tr onclick="enterSimulation('${roleToEnter}', '${c.title}', '${c.id}')" class="group transition-colors hover:bg-slate-50 cursor-pointer">
+                        <td class="px-4 py-3">
+                            <div class="font-bold text-slate-800 group-hover:text-${colorClass}-700">${c.title}</div>
+                            <div class="text-xs text-slate-400">Início: ${c.start_date}</div>
+                        </td>
+                        <td class="px-4 py-3"><span class="text-xs font-bold bg-slate-100 px-2 py-1 rounded text-slate-600">${org ? org.name : 'N/A'}</span></td>
+                        <td class="px-4 py-3 text-xs text-slate-500">${c.start_date}</td>
+                        <td class="px-4 py-3 text-xs text-slate-500">${c.end_date}</td>
+                        <td class="px-4 py-3">
+                             <div class="w-16 bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-${colorClass}-500 w-[${c.progress}%] h-1.5 rounded-full"></div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <span class="font-bold text-xs bg-${colorClass}-50 text-${colorClass}-700 px-2 py-1 rounded transition group-hover:bg-${colorClass}-100">
+                                Acessar
+                            </span>
+                        </td>
+                    </tr>`;
+                }).join('');
+            }
+        }
+
+        // --- RENDERIZAÇÃO: FORMADOR (TABELA DE NOTAS) ---
+        function renderFormadorEvaluationTable(courseId) {
+            // Buscar matrículas do curso atual (ou todas se null)
+            const targetCourseId = courseId || (mockStore.courses[0] ? mockStore.courses[0].id : null);
+            const enrollments = mockStore.enrollments.filter(e => e.course_id === targetCourseId);
+
+            // Critérios únicos
+            const allAssessments = mockStore.assessments.filter(a => enrollments.map(e => e.id).includes(a.enrollment_id));
+            const extraCriteriaKeys = [...new Set(allAssessments.filter(a => a.is_extra_criteria).map(a => a.criteria_key))];
+
+            const thead = document.getElementById('aba2-table-head');
+            const tbody = document.getElementById('aba2-evaluation-table-body');
+
+            if (!thead || !tbody) return;
+
+            // Header
+            let h = `<tr>
+                <th class="px-4 py-3 text-left text-xs font-bold text-slate-500 uppercase">Aluno</th>
+                <th class="px-4 py-3 text-center text-xs font-bold text-slate-500 uppercase">Base (20)</th>`;
+            extraCriteriaKeys.forEach(c => {
+                h += `<th class="px-4 py-3 text-center text-xs font-bold text-yellow-700 bg-yellow-50 uppercase cursor-pointer">${c}</th>`;
+            });
+            h += `<th class="px-4 py-3 text-center text-xs font-bold text-slate-500 uppercase">Final</th></tr>`;
+            thead.innerHTML = h;
+
+            // Body
+            tbody.innerHTML = enrollments.map(enr => {
+                const profile = mockStore.profiles.find(p => p.id === enr.user_id);
+                // Notas deste aluno
+                const myNotes = mockStore.assessments.filter(a => a.enrollment_id === enr.id);
+
+                const noteTotal = myNotes.find(n => n.criteria_key === 'total')?.score_value || 0;
+                let rowHtml = `
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 font-bold text-slate-700 text-sm">${profile ? profile.full_name : 'Unknown'}</td>
+                        <td class="px-4 py-3 text-center editable-cell" onclick="editGrade('${enr.id}', 'total')">${noteTotal.toFixed(1)}</td>
+                `;
+
+                extraCriteriaKeys.forEach(key => {
+                    const val = myNotes.find(n => n.criteria_key === key)?.score_value || '-';
+                    const displayVal = typeof val === 'number' ? val.toFixed(1) : val;
+                    rowHtml += `<td class="px-4 py-3 text-center editable-cell bg-yellow-50/30" onclick="editExtra('${enr.id}', '${key}')">${displayVal}</td>`;
+                });
+
+                // Cálculo Final Simples
+                const final = noteTotal;
+                rowHtml += `<td class="px-4 py-3 text-center font-bold text-emerald-600">${final.toFixed(1)}</td></tr>`;
+                return rowHtml;
+            }).join('');
+
+            // Atualizar lista lateral também
+            renderFormadorSideList(enrollments);
+        }
+
+        function renderFormadorSideList(enrollments) {
+            const listContainer = document.getElementById('participantList');
+            if (listContainer) {
+                listContainer.innerHTML = enrollments.map(enr => {
+                    const p = mockStore.profiles.find(u => u.id === enr.user_id);
+                    return `<div class="p-2 border-b border-slate-100 hover:bg-slate-50 cursor-pointer text-xs font-medium text-slate-600 block" onclick="alert('Selecionar aluno ' + '${p.full_name}')">${p.full_name}</div>`;
+                }).join('');
+
+                const totalEl = document.getElementById('totalParticipants');
+                if (totalEl) totalEl.textContent = enrollments.length;
+            }
+        }
+
+        // --- RENDERIZAÇÃO: GESTOR (ROI) ---
+       function renderGestorDashboard() {
+    // 1. Calcular totais do mockStore.roi_metrics
+    const totalEuros = mockStore.roi_metrics.reduce((acc, curr) => acc + (curr.estimated_monetary_value || 0), 0);
+    const totalMinutes = mockStore.roi_metrics.reduce((acc, curr) => acc + (curr.minutes_saved_per_task * curr.frequency_weekly * 4), 0);
+    const totalHours = Math.round(totalMinutes / 60);
+
+    // 2. Atualizar a Interface (IDs novos do V2.1)
+    const elHours = document.getElementById('gestor-kpi-hours');
+    const elMoney = document.getElementById('gestor-kpi-money');
+
+    // Se os elementos existirem (ou seja, se estivermos na view de gestor), atualiza
+    if (elHours) {
+        // Animação simples de número
+        elHours.textContent = `${totalHours}h`; 
+    }
+    if (elMoney) {
+        elMoney.textContent = `€${totalEuros.toLocaleString('pt-PT')}`;
+    }
+}
+
+        // --- INTERAÇÕES DE EDIÇÃO (MOCK) ---
+        function editGrade(enrollmentId, criteriaKey) {
+            const newVal = prompt("Nova Nota (0-20):");
+            if (newVal && !isNaN(newVal)) {
+                let existing = mockStore.assessments.find(a => a.enrollment_id === enrollmentId && a.criteria_key === criteriaKey);
+                if (existing) {
+                    existing.score_value = parseFloat(newVal);
+                } else {
+                    mockStore.assessments.push({
+                        id: `new_${Date.now()}`,
+                        enrollment_id: enrollmentId,
+                        criteria_key: criteriaKey,
+                        score_value: parseFloat(newVal),
+                        max_score: 20
+                    });
+                }
+                renderFormadorEvaluationTable(currentContextId);
+            }
+        }
+
+        function editExtra(enrollmentId, key) {
+            const newVal = prompt(`Nota para ${key}:`);
+            if (newVal && !isNaN(newVal)) {
+                let existing = mockStore.assessments.find(a => a.enrollment_id === enrollmentId && a.criteria_key === key);
+                if (existing) existing.score_value = parseFloat(newVal);
+                renderFormadorEvaluationTable(currentContextId);
+            }
+        }
+
+
+        // --- INIT & NAVIGATION ---
+        (function initApp() {
+            initMockData();
+
+            // Render Inicial Admin
+            renderAdminDashboard();
+            initAdminCharts();
+
+            // Esconder loader
+            const loader = document.getElementById('loader');
+            if (loader) loader.classList.add('hidden');
+        })();
+
+
+        // --- EVENTOS GLOBAIS ---
+        window.enterSimulation = function (role, contextTitle, contextId) {
+            currentRole = role;
+            currentContextId = contextId || (mockStore.courses[0] ? mockStore.courses[0].id : null);
+            const contextName = contextTitle || 'Simulação';
+
+            // UI Changes
+            document.getElementById('app-body').className = `h-screen overflow-hidden theme-${role}`;
+            document.getElementById('simulation-bar').classList.remove('hidden');
+            document.getElementById('main-sidebar').classList.add('pt-12');
+            const mainContent = document.getElementById('app-main-content');
+            if (mainContent) mainContent.classList.add('mt-14');
+
+            document.getElementById('sim-role-name').textContent = role.toUpperCase();
+            document.getElementById('sim-context-name').textContent = contextName;
+
+            const roleSelect = document.getElementById('role-simulator');
+            if (roleSelect) roleSelect.value = role;
+
+            // Panels Visibility
+            ['admin', 'formador', 'gestor', 'aluno'].forEach(r => {
+                const el = document.getElementById(`view-${r}`);
+                if (el) {
+                    if (r === role) {
+                        el.classList.remove('hidden-panel', 'hidden');
+                        el.classList.add('visible-panel');
+                    } else {
+                        el.classList.add('hidden-panel', 'hidden');
+                        el.classList.remove('visible-panel');
+                    }
+                }
+            });
+
+            // Render Nav & Specifics
+            renderNav(role);
+
+            if (role === 'formador') {
+                renderFormadorEvaluationTable(currentContextId);
+                initV3Charts();
+            }
+            if (role === 'gestor') {
+                renderGestorDashboard();
+            }
+            if (role === 'aluno') {
+                setTimeout(renderStudentChart, 100);
+            }
+
+            lucide.createIcons();
+        };
+
+        window.exitSimulation = function () {
+            currentRole = 'admin';
+            document.getElementById('app-body').className = `h-screen overflow-hidden theme-admin`;
+            document.getElementById('simulation-bar').classList.add('hidden');
+            document.getElementById('main-sidebar').classList.remove('pt-12');
+            const mainContent = document.getElementById('app-main-content');
+            if (mainContent) mainContent.classList.remove('mt-14');
+
+            const roleSelect = document.getElementById('role-simulator');
+            if (roleSelect) roleSelect.value = 'admin';
+
+            document.getElementById('view-admin').classList.remove('hidden-panel', 'hidden');
+            document.getElementById('view-admin').classList.add('visible-panel');
+
+            ['formador', 'gestor', 'aluno'].forEach(r => {
+                const el = document.getElementById(`view-${r}`);
+                if (el) {
+                    el.classList.add('hidden-panel', 'hidden');
+                    el.classList.remove('visible-panel');
+                }
+            });
+
+            renderNav('admin');
+            renderAdminDashboard();
+            initAdminCharts();
+        };
+
+        // --- CONFIGURAÇÃO DE UI (Menus e Contextos) ---
+        const menus = {
+            admin: [{ icon: 'layout-dashboard', text: 'Painel Geral', active: true }, { icon: 'calendar', text: 'Gerir Formações' }, { icon: 'users', text: 'Participantes' }],
+            formador: [{ icon: 'layout', text: 'Painel Pedagógico', active: true }, { icon: 'users', text: 'Gestão de Turma' }, { icon: 'folder-open', text: 'Conteúdos' }, { icon: 'clipboard-check', text: 'Avaliação' }],
+            gestor: [{ icon: 'bar-chart-2', text: 'Analytics ROI', active: true }, { icon: 'users', text: 'Funcionários' }],
+            aluno: [{ icon: 'home', text: 'Início', active: true }, { icon: 'book-open', text: 'Meus Cursos' }]
+        };
+
+        const contexts = {
+            admin: {
+                label: 'Super Admin',
+                simName: 'Administrador',
+                modalHelper: 'Admin pode adicionar Formadores e Gestores.',
+                btnColor: 'bg-teal-600 hover:bg-teal-700',
+                userRoles: [{ val: 'formador', txt: 'Formador' }, { val: 'gestor', txt: 'Gestor' }],
+                headerActions: [{ type: 'cliente', text: 'Novo Cliente', icon: 'briefcase', class: 'btn-secondary', modal: 'cliente' }, { type: 'formacao', text: 'Nova Formação', icon: 'plus', class: 'btn-primary', modal: 'formacao' }]
+            },
+            formador: {
+                label: 'Formador Sénior',
+                simName: 'Formador',
+                modalHelper: 'Formador apenas pode registar novos alunos.',
+                btnColor: 'bg-teal-600 hover:bg-teal-700',
+                userRoles: [{ val: 'aluno', txt: 'Aluno' }],
+                headerActions: [{ type: 'upload', text: 'Upload Conteúdo', icon: 'upload-cloud', class: 'btn-secondary', modal: 'upload' }]
+            },
+            gestor: {
+                label: 'Gestor de Conta',
+                simName: 'Gestor',
+                modalHelper: 'Gestor pode registar funcionários da empresa.',
+                btnColor: 'bg-indigo-600 hover:bg-indigo-700',
+                userRoles: [{ val: 'funcionario', txt: 'Funcionário' }],
+                headerActions: [{ type: 'relatorio', text: 'Criar Relatório', icon: 'file-text', class: 'btn-secondary', modal: 'relatorio' }]
+            },
+            aluno: {
+                label: 'Estudante',
+                simName: 'Aluno',
+                modalHelper: 'Submissão de Projetos e Inquéritos.',
+                btnColor: 'bg-orange-600 hover:bg-orange-700',
+                userRoles: [],
+                headerActions: []
+            }
+        };
+
+        function renderHeaderButtons(role) {
+            const container = document.getElementById('admin-actions');
+            if (!container) return;
+            const config = contexts[role];
+            let htmlActions = (config.headerActions || []).map(action => `
+                <button onclick="openDynamicModal('${action.modal || action.type}')" class="${action.class} text-xs">
+                    <i data-lucide="${action.icon}" class="w-4 h-4"></i> ${action.text}
+                </button>
+             `).join('');
+            let userButtonText = 'Novo Utilizador';
+            if (role === 'formador') userButtonText = 'Adicionar Aluno';
+            else if (role === 'gestor') userButtonText = 'Adicionar Func.';
+            const fixedUserButton = `
+                 <button onclick="openDynamicModal('utilizador')" class="text-xs text-white px-4 py-2 rounded-lg font-bold shadow-sm transition flex items-center gap-2 ${config.btnColor}">
+                     <i data-lucide="user-plus" class="w-4 h-4"></i> ${userButtonText}
+                 </button>
+             `;
+            container.innerHTML = htmlActions + fixedUserButton;
+            lucide.createIcons();
+        }
+
+        function renderNav(role) {
+            const nav = document.getElementById('dynamic-nav');
+            if (nav) {
+                nav.innerHTML = '';
+                (menus[role] || []).forEach(item => {
+                    nav.innerHTML += `<div class="nav-item ${item.active ? 'active' : ''}"><i data-lucide="${item.icon}" class="w-4 h-4"></i> ${item.text}</div>`;
+                });
+                lucide.createIcons();
+                renderHeaderButtons(role);
+            }
+        }
+
+        // --- CHARTS ---
+        function initAdminCharts() {
+            if (window.adminChart) window.adminChart.destroy();
+            const el = document.getElementById('adminContentChart');
+            if (el) {
+                window.adminChart = new Chart(el, { type: 'bar', data: { labels: ['PDF', 'Vídeo', 'Quiz'], datasets: [{ data: [15, 8, 5], backgroundColor: '#0d9488', borderRadius: 4 }] }, options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+            }
+        }
+
+        function initV3Charts() {
+            if (window.confChart) window.confChart.destroy();
+            const el1 = document.getElementById('confidenceChart');
+            if (el1) window.confChart = new Chart(el1, { type: 'bar', data: { labels: ['Ini', 'Atu'], datasets: [{ data: [2, 4], backgroundColor: ['#cbd5e1', '#10b981'] }] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+
+            if (window.catChart) window.catChart.destroy();
+            const el2 = document.getElementById('categoriesChart');
+            if (el2) window.catChart = new Chart(el2, { type: 'doughnut', data: { labels: ['Feedback A', 'Feedback B'], datasets: [{ data: [30, 70], backgroundColor: ['#f59e0b', '#3b82f6'] }] }, options: { maintainAspectRatio: false } });
+        }
+
+        function renderStudentChart() {
+            if (window.stChart) window.stChart.destroy();
+            const el = document.getElementById('student-evolution-chart');
+            if (el) window.stChart = new Chart(el, { type: 'line', data: { labels: ['S1', 'S2', 'S3', 'S4'], datasets: [{ label: 'Minha Nota', data: [12, 14, 15, 16], borderColor: '#f97316', fill: true }] }, options: { maintainAspectRatio: false, scales: { y: { min: 0, max: 20 } } } });
+        }
+
+        // --- UI UTILS & MODALS ---
+        window.switchFormadorTab = function (tabName) {
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('text-teal-700', 'border-b-2', 'border-teal-600', 'font-bold');
+                b.classList.add('text-slate-500', 'font-medium');
+                if (b.textContent.toLowerCase().includes(tabName.substring(0, 3))) {
+                    b.classList.add('text-teal-700', 'border-b-2', 'border-teal-600', 'font-bold'); b.classList.remove('text-slate-500');
+                }
+            });
+            document.querySelectorAll('.v3-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.v3-panel').forEach(p => p.style.display = 'none');
+            const t = document.getElementById(`tab-${tabName}`);
+            if (t) { t.style.display = 'block'; setTimeout(() => t.classList.add('active'), 10); }
+            if (tabName === 'avaliacao') renderFormadorEvaluationTable(currentContextId);
+        }
+
+        // --- STATE UI ---
+        let currentModalType = null;
+
+
+
+        window.openDynamicModal = function (type) {
+            currentModalType = type;
+            const overlay = document.getElementById('generic-modal');
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const body = document.getElementById('modal-body');
+            const btn = document.getElementById('modal-save-btn');
+            const config = contexts[currentRole];
+
+            if (!overlay) return;
+            overlay.classList.remove('hidden');
+
+            // Apply Modal Specific Styles (forcing dark mode for modal content via glass-panel class on parent)
+
+            // Context Info
+            subtitle.textContent = `CONTEXTO: ${config.simName.toUpperCase()}`;
+            btn.textContent = "Salvar";
+            btn.onclick = saveModalData; // Bind save function
+
+            // Button Style (maintaining theme color but adapting to dark modal)
+            btn.className = `${config.btnColor} text-white px-6 py-2 rounded-lg text-sm font-bold shadow-md transition transform active:scale-95 flex items-center gap-2`;
+
+            let content = '';
+
+            if (type === 'cliente') {
+                title.textContent = "Novo Cliente";
+                content = `
+                <div>
+                    <label class="label text-slate-400">Nome Cliente / Organização</label>
+                    <input id="inp-client-name" class="input-clean" type="text" placeholder="Ex: TechCorp SA">
+                </div>
+
+                <div>
+                    <label class="label text-slate-400">Setor</label>
+                    <div id="sector_wrapper">
+                        <select id="inp-client-type" class="input-clean cursor-pointer" onchange="handleSectorChange(this)">
+                            <option value="Educação">Educação</option>
+                            <option value="Financeiro">Financeiro</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="new_sector" class="font-bold text-cyan-400 bg-slate-800">+ Adicionar Setor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="label text-slate-400">Tipo de Contrato</label>
+                    <select id="inp-client-contract" class="input-clean cursor-pointer">
+                        <option value="standard">Padrão 1-10 – PT</option>
+                        <option value="roi">Corporate ROI</option>
+                        <option value="consulting">Consultoria Metodológica</option>
+                    </select>
+                </div>
+            `;
+                btn.textContent = "Criar Cliente";
+            }
+            else if (type === 'formacao') {
+                title.textContent = "Nova Formação";
+                // Populate Clients Dropdown
+                const clientOpts = mockStore.organizations.map(o => `<option value="${o.id}">${o.name}</option>`).join('');
+                content = `
+                <div><label class="label text-slate-400">Título</label><input id="inp-course-title" class="input-clean" type="text" placeholder="Ex: Workshop IA"></div>
+                <div><label class="label text-slate-400">Cliente Linked</label><select id="inp-course-client" class="input-clean">${clientOpts}</select></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="label text-slate-400">Início</label><input id="inp-course-start" class="input-clean" type="date"></div>
+                    <div><label class="label text-slate-400">Fim</label><input id="inp-course-end" class="input-clean" type="date"></div>
+                </div>
+            `;
+                btn.textContent = "Agendar";
+            }
+            else if (type === 'utilizador') {
+                title.textContent = "Novo Utilizador";
+                const clientOpts = mockStore.organizations.map(o => `<option value="${o.id}">${o.name}</option>`).join('');
+                const roleOpts = config.userRoles.map(r => `<option value="${r.val}">${r.txt}</option>`).join('');
+
+                content = `
+                <div><label class="label text-slate-400">Nome</label><input id="inp-user-name" class="input-clean" type="text"></div>
+                <div><label class="label text-slate-400">Email Corporativo</label><input id="inp-user-email" class="input-clean" type="email"></div>
+                <div class="grid grid-cols-2 gap-4">
+                     <div><label class="label text-slate-400">Função</label><select id="inp-user-role" class="input-clean">${roleOpts}</select></div>
+                     <div><label class="label text-slate-400">Organização</label><select id="inp-user-org" class="input-clean">${clientOpts}</select></div>
+                </div>
+            `;
+                btn.textContent = "Adicionar";
+            }
+            else if (type === 'avaliacao') {
+                title.textContent = "Nova Avaliação";
+                content = `
+                <div><label class="label text-slate-400">Nome do Critério</label><input id="inp-crit-name" class="input-clean" type="text" placeholder="Ex: Trabalho de Grupo"></div>
+                <div><label class="label text-slate-400">Peso Máximo</label><input id="inp-crit-max" class="input-clean" type="number" value="20"></div>
+                <div class="text-xs text-slate-400 mt-2">Esta coluna será adicionada à Pauta de Avaliação.</div>
+            `;
+                btn.textContent = "Criar Coluna";
+            }
+            else if (type === 'upload') {
+                title.textContent = "Upload de Conteúdo";
+                content = `
+                 <div>
+                    <label class="label text-slate-400">Tipo de Recurso</label>
+                    <select class="input-clean">
+                        <option>PDF Document</option>
+                        <option>Vídeo Aula</option>
+                        <option>Link Externo</option>
+                    </select>
+                </div>
+                <div class="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center hover:border-cyan-500 transition cursor-pointer">
+                    <i data-lucide="cloud-upload" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
+                    <p class="text-sm text-slate-300">Arraste o arquivo ou clique aqui</p>
+                </div>`;
+                btn.textContent = "Fechar";
+            }
+            else {
+                title.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+                content = `<div><label class="label text-slate-400">Nome</label><input class="input-clean" type="text"></div>`;
+            }
+
+            body.innerHTML = content;
+            lucide.createIcons();
+        }
+
+        // --- SECTOR LOGIC ---
+        window.handleSectorChange = function (select) {
+            if (select.value === 'new_sector') {
+                const wrapper = document.getElementById('sector_wrapper');
+                wrapper.innerHTML = `
+                    <div class="flex gap-2 animate-fade-in">
+                        <input type="text" id="inp-client-type" class="input-clean border-cyan-500" placeholder="Digite o nome do novo setor..." autofocus>
+                        <button onclick="resetSectorSelect()" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded border border-slate-600 transition" title="Cancelar">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }
+        }
+
+        window.resetSectorSelect = function () {
+            const wrapper = document.getElementById('sector_wrapper');
+            wrapper.innerHTML = `
+                <select id="inp-client-type" class="input-clean cursor-pointer" onchange="handleSectorChange(this)">
+                    <option value="Educação">Educação</option>
+                    <option value="Financeiro">Financeiro</option>
+                    <option value="Tecnologia">Tecnologia</option>
+                    <option value="Saúde">Saúde</option>
+                    <option value="new_sector" class="font-bold text-cyan-400 bg-slate-800">+ Adicionar Setor</option>
+                </select>
+            `;
+        }
+
+        window.closeModal = function () {
+            const overlay = document.getElementById('generic-modal');
+            if (overlay) overlay.classList.add('hidden');
+            currentModalType = null;
+        }
+
+        window.saveModalData = function () {
+            // Logic to save data to mockStore
+            let success = true;
+
+            if (currentModalType === 'cliente') {
+                const name = document.getElementById('inp-client-name').value;
+                const type = document.getElementById('inp-client-type').value;
+                if (name) {
+                    mockStore.organizations.push({
+                        id: `org_${Date.now()}`,
+                        name: name,
+                        type: type
+                    });
+                    renderAdminDashboard(); // Refresh if visible, or just state
+                } else success = false;
+            }
+            else if (currentModalType === 'formacao') {
+                const title = document.getElementById('inp-course-title').value;
+                const client = document.getElementById('inp-course-client').value;
+                const start = document.getElementById('inp-course-start').value;
+                const end = document.getElementById('inp-course-end').value;
+                if (title && client) {
+                    mockStore.courses.push({
+                        id: `course_${Date.now()}`,
+                        title: title,
+                        client_org_id: client,
+                        start_date: start || '2025-01-01',
+                        end_date: end || '2025-02-01',
+                        is_active: true,
+                        progress: 0
+                    });
+                    renderAdminDashboard();
+                } else success = false;
+            }
+            else if (currentModalType === 'utilizador') {
+                const name = document.getElementById('inp-user-name').value;
+                // const email = document.getElementById('inp-user-email').value; // Unused
+                const role = document.getElementById('inp-user-role').value;
+                const org = document.getElementById('inp-user-org').value;
+
+                if (name && role) {
+                    const newId = `usr_${Date.now()}`;
+                    mockStore.profiles.push({
+                        id: newId,
+                        full_name: name,
+                        role: role,
+                        organization_id: org
+                    });
+
+                    // Se for aluno e estivermos num contexto de curso, matricular?
+                    // Por simplificação, se um formador cria um aluno, vamos assumir que é para a turma atual
+                    if (role === 'student' && currentContextId) {
+                        mockStore.enrollments.push({
+                            id: `enr_${newId}_${currentContextId}`,
+                            user_id: newId,
+                            course_id: currentContextId,
+                            is_active: true
+                        });
+                        // Add default grades
+                        mockStore.assessments.push({
+                            id: `asm_${newId}_total`,
+                            enrollment_id: `enr_${newId}_${currentContextId}`,
+                            criteria_key: 'total',
+                            score_value: 0,
+                            max_score: 20
+                        });
+                        renderFormadorEvaluationTable(currentContextId);
+                    }
+                } else success = false;
+            }
+            else if (currentModalType === 'avaliacao') {
+                const name = document.getElementById('inp-crit-name').value;
+                const max = parseFloat(document.getElementById('inp-crit-max').value || '20');
+
+                if (name && currentContextId) {
+                    // Add this criteria to ALL enrollments of current course
+                    const enrollments = mockStore.enrollments.filter(e => e.course_id === currentContextId);
+                    enrollments.forEach(enr => {
+                        // Check if exists
+                        const exists = mockStore.assessments.find(a => a.enrollment_id === enr.id && a.criteria_key === name);
+                        if (!exists) {
+                            mockStore.assessments.push({
+                                id: `asm_${enr.id}_${Date.now()}`,
+                                enrollment_id: enr.id,
+                                criteria_key: name,
+                                score_value: 0,
+                                max_score: max,
+                                is_extra_criteria: true
+                            });
+                        }
+                    });
+                    renderFormadorEvaluationTable(currentContextId);
+                } else success = false;
+            }
+
+            if (success) {
+                window.closeModal();
+                const t = document.getElementById('toast-notification');
+                if (t) {
+                    t.textContent = "Dados salvos com sucesso!";
+                    t.classList.add('show');
+                    setTimeout(() => t.classList.remove('show'), 3000);
+                }
+            } else {
+                alert("Por favor, preencha os campos obrigatórios.");
+            }
+        }
+
     </script>
 </body>
+
 </html>
